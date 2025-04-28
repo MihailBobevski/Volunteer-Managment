@@ -190,6 +190,11 @@ namespace VolunteerManagment.Migrations
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.HasKey("UserId");
 
                     b.HasIndex("RoleId");

@@ -1,0 +1,10 @@
+﻿@model VolunteerManagment.Models.User
+<form asp-action="Login" method="post">
+    <input asp-for="FName" placeholder="Username" />
+    <span asp-validation-for="FName"></span>
+
+    <input asp-for="Password" type="password" placeholder="Password" />
+    <span asp-validation-for="Password"></span>
+
+    <button type="submit">Login</button>
+</form>
