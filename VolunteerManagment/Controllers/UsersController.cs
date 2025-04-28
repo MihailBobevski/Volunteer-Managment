@@ -50,20 +50,26 @@ namespace VolunteerManagment.Controllers
             return View(user);
         }
 
-        public async Task<IActionResult> UserTasks(int userId, int eventId)
+        public async Task<IActionResult> UserTasks(int? id)
         {
-            var userTasks = await _context.Tasks
-                .Where(t => t.AssignedTo == userId && t.EventId == eventId)
-            .ToListAsync();
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-            var eventDetails = await _context.Events
-                .FirstOrDefaultAsync(e => e.EventId == eventId);
+            var user = await _context.Users
+                .Include(u => u.Tasks)
+                    .ThenInclude(et => et.Event)
+                .FirstOrDefaultAsync(u => u.UserId == id);
 
-            ViewBag.Event = eventDetails;
-            ViewBag.UserId = userId;
+            if (user == null)
+            {
+                return NotFound();
+            }
 
-            return View(userTasks);
+            return View(user.Tasks.ToList());
         }
+
 
 
         // GET: Users/Create

@@ -35,8 +35,12 @@ namespace VolunteerManagment.Controllers
             }
 
             var @event = await _context.Events
-                .Include(@event => @event.Organizer)
-                .FirstOrDefaultAsync(m => m.EventId == id);
+           .Include(e => e.Organizer)
+           .Include(e => e.Volunteers)
+           .ThenInclude(ve => ve.User)
+           .FirstOrDefaultAsync(m => m.EventId == id);
+
+
             if (@event == null)
             {
                 return NotFound();
@@ -44,6 +48,7 @@ namespace VolunteerManagment.Controllers
 
             return View(@event);
         }
+
 
         // GET: Events/Create
         public IActionResult Create()

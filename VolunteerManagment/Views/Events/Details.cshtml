@@ -52,3 +52,37 @@
     <a asp-action="Edit" asp-route-id="@Model?.EventId">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
+
+
+<h4>Event Participants</h4>
+
+@if (Model.Volunteers != null && Model.Volunteers.Any())
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var volunteerEvent in Model.Volunteers)
+            {
+                <tr>
+                    <td>@volunteerEvent.User.UserName</td>
+                    <td>@volunteerEvent.User.Email</td>
+                    <td>
+                        <a asp-controller="Users" asp-action="UserTasks" asp-route-id="@volunteerEvent.User.UserId" class="btn btn-primary btn-sm">
+                            View Tasks
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No volunteers for this event.</p>
+}
