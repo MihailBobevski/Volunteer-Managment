@@ -35,10 +35,7 @@ namespace VolunteerManagment.Models
 
         [MaxLength(20)]
         public string Phone { get; set; }
-        [ForeignKey("RoleId")]
         public int RoleId { get; set; } = 1;
-        [ValidateNever]
-        public Roles Role { get; set; } 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public ICollection<VolunteerEvent> VolunteerEvents { get; set; } = new List<VolunteerEvent>();

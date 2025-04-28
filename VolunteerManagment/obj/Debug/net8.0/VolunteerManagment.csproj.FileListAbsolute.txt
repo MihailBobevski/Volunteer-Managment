@@ -291,3 +291,4 @@ C:\Users\Kolio\Desktop\New folder (3)\Volunteer-Managment\VolunteerManagment\bin
 C:\Users\Kolio\Desktop\New folder (3)\Volunteer-Managment\VolunteerManagment\bin\Debug\net8.0\System.Security.Cryptography.Pkcs.dll
 C:\Users\Kolio\Desktop\New folder (3)\Volunteer-Managment\VolunteerManagment\bin\Debug\net8.0\System.Security.Cryptography.Xml.dll
 C:\Users\Kolio\Desktop\New folder (3)\Volunteer-Managment\VolunteerManagment\bin\Debug\net8.0\runtimes\win\lib\net8.0\System.Security.Cryptography.Pkcs.dll
+C:\Users\Kolio\Desktop\New folder (3)\Volunteer-Managment\VolunteerManagment\obj\Debug\net8.0\VolunteerManagment.sourcelink.json

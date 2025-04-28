@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System.Runtime.Intrinsics.Arm;
 using System.Security.Cryptography;
 using System.Text;
@@ -39,10 +40,42 @@ namespace VolunteerManagment.Controllers
                 _db.Users.Add(user);
                 _db.SaveChanges();
                 return RedirectToAction("Login");   
+                
             }
             return View(user);
         }
+        [HttpGet]
+        public ActionResult Login()
+        {
+            return View();
+        }
+        [HttpPost]
 
+        public ActionResult Login(User user)
+        {
+            if (Request.Form["UserName"]!=""&& Request.Form["Password"] != "")
+            {
+                if(_db.Users.Any(u => u.UserName == user.UserName && u.Password == HashPassword(user.Password)))
+                {
+                    var User = _db.Users.FirstOrDefault(u => u.UserName == user.UserName && u.Password == HashPassword(user.Password));
+                    if(User.RoleId == 1)
+                    {
+                        HttpContext.Session.SetString("Role","User");
+                    }
+                    if (User.RoleId == 2)
+                    {
+                        HttpContext.Session.SetString("Role", "Organizer");
+                    }
+                    if (User.RoleId == 3)
+                    {
+                        HttpContext.Session.SetString("Role", "Admin");
+                    }
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+
+            return View();
+        }
         private string HashPassword(string password)
         {
             using (SHA256 sha256 = SHA256.Create())
