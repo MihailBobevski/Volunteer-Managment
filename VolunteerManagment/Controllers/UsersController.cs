@@ -34,13 +34,37 @@ namespace VolunteerManagment.Controllers
 
             var user = await _context.Users
                 .FirstOrDefaultAsync(m => m.UserId == id);
+
             if (user == null)
             {
                 return NotFound();
             }
 
+            var volunteerEvents = await _context.VolunteersEvents
+                .Include(ve => ve.Event)
+                .Where(ve => ve.UserId == id)
+                .ToListAsync();
+
+            ViewBag.VolunteerEvents = volunteerEvents;
+
             return View(user);
         }
+
+        public async Task<IActionResult> UserTasks(int userId, int eventId)
+        {
+            var userTasks = await _context.Tasks
+                .Where(t => t.AssignedTo == userId && t.EventId == eventId)
+            .ToListAsync();
+
+            var eventDetails = await _context.Events
+                .FirstOrDefaultAsync(e => e.EventId == eventId);
+
+            ViewBag.Event = eventDetails;
+            ViewBag.UserId = userId;
+
+            return View(userTasks);
+        }
+
 
         // GET: Users/Create
         public IActionResult Create()

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Runtime.Intrinsics.Arm;
 using System.Security.Cryptography;
 using System.Text;
@@ -11,9 +12,11 @@ namespace VolunteerManagment.Controllers
     public class UserController : Controller
     {
         private  ApplicationDbContext _db;
+       
         public UserController(ApplicationDbContext db)
         {
             _db = db;
+
         }
 
         [HttpGet]
@@ -89,5 +92,13 @@ namespace VolunteerManagment.Controllers
                 return builder.ToString();
             }
         }
+
+        [HttpGet]
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear(); 
+            return RedirectToAction("Login", "User"); 
+        }
     }
+
 }

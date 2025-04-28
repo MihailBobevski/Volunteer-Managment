@@ -52,3 +52,31 @@
     <a asp-action="Edit" asp-route-id="@Model?.UserId">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
+
+<h3>Events Volunteered</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Event Title</th>
+            <th>Location</th>
+            <th>Event Date</th>
+            <th>View Tasks</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var ve in (List<VolunteerManagment.Models.VolunteerEvent>)ViewBag.VolunteerEvents)
+        {
+            <tr>
+                <td>@ve.Event.Title</td>
+                <td>@ve.Event.Location</td>
+                <td>@ve.Event.Date.ToShortDateString()</td>
+                <td>
+                    <a class="btn btn-primary" asp-controller="Users" asp-action="UserTasks" asp-route-userId="@ve.UserId" asp-route-eventId="@ve.EventId">
+                        View Tasks
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

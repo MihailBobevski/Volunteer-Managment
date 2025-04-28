@@ -36,6 +36,7 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Login">Login</a>
                         </li>
                        }
+                        
                         @if (Role == "User")
                         {
                         }
@@ -49,7 +50,10 @@
                         {
                         }
 
-
+                        @if (Context.Session.GetString("Role") != null)
+                        {
+                            <a class="nav-link text-dark" asp-controller="User" asp-action="Logout">Logout</a>
+                        }
                     </ul>
                 </div>
             </div>

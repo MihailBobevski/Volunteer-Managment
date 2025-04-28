@@ -1,0 +1,29 @@
+﻿@model List<VolunteerManagment.Models.EventTask>
+
+<h2>Tasks for Event: @ViewBag.Event.Title</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Task Title</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Deadline</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var task in Model)
+        {
+            <tr>
+                <td>@task.Title</td>
+                <td>@task.Description</td>
+                <td>@task.Status</td>
+                <td>@task.Deadline.ToShortDateString()</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a class="btn btn-secondary" asp-controller="Users" asp-action="Details" asp-route-id="@ViewBag.UserId">
+    Back to User Details
+</a>

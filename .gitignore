@@ -1,2 +1,42 @@
-VolunteerManagment/VolunteerManagmentDataBase.ldf
-VolunteerManagment/VolunteerManagmentDataBase.mdf
+# Ignore build results
+bin/
+obj/
+
+# Ignore user-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Ignore Visual Studio temporary files
+.vs/
+
+# Ignore SQLite database files
+*.db
+*.sqlite
+
+# Ignore build artifacts
+*.dll
+*.exe
+*.pdb
+
+# Ignore publish folder
+publish/
+
+# Ignore logs
+*.log
+
+# Ignore ASP.NET Secrets folder
+secrets.json
+
+# Ignore Rider / JetBrains IDEs
+.idea/
+
+# Ignore crash dumps
+*.dmp
+
+# Ignore node_modules if you ever use npm (optional, safe)
+node_modules/
+
+# Ignore generated migration snapshots (optional if you want)
+Migrations/
