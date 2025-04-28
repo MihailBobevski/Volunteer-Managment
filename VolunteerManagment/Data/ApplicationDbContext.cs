@@ -7,29 +7,23 @@ namespace VolunteerManagment2.Data
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options) { }
-        
+
         public DbSet<User> Users { get; set; }
         public DbSet<Event> Events { get; set; }
         public DbSet<VolunteerEvent> VolunteersEvents { get; set; }
         public DbSet<EventTask> Tasks { get; set; }
         public DbSet<Report> Reports { get; set; }
-        public DbSet<Roles> Roles { get; set; }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer("Data Source=(localdb)\\ProjectModels;Initial Catalog=VolunteerManagmentDataBase;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False");
-        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-         
             modelBuilder.Entity<Event>()
                 .HasOne(e => e.Organizer)
                 .WithMany(u => u.Events)
                 .HasForeignKey(e => e.CreatedBy)
-                .OnDelete(DeleteBehavior.Restrict); //  Не позволява каскадно изтриване
+                .OnDelete(DeleteBehavior.Restrict);
 
-        
             modelBuilder.Entity<VolunteerEvent>()
                 .HasOne(ve => ve.User)
                 .WithMany(u => u.VolunteerEvents)
@@ -42,14 +36,12 @@ namespace VolunteerManagment2.Data
                 .HasForeignKey(ve => ve.EventId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-       
             modelBuilder.Entity<EventTask>()
                 .HasOne(t => t.Event)
                 .WithMany(e => e.Tasks)
                 .HasForeignKey(t => t.EventId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-         
             modelBuilder.Entity<EventTask>()
                 .HasOne(t => t.User)
                 .WithMany(u => u.Tasks)
@@ -62,7 +54,5 @@ namespace VolunteerManagment2.Data
                 .HasForeignKey(r => r.EventId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
-      
     }
 }
-

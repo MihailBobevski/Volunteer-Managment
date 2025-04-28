@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using VolunteerManagment.Models;
 using VolunteerManagment2.Data;
@@ -22,8 +21,7 @@ namespace VolunteerManagment.Controllers
         // GET: Users
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Users.Include(u => u.Role);
-            return View(await applicationDbContext.ToListAsync());
+            return View(await _context.Users.ToListAsync());
         }
 
         // GET: Users/Details/5
@@ -35,7 +33,6 @@ namespace VolunteerManagment.Controllers
             }
 
             var user = await _context.Users
-                .Include(u => u.Role)
                 .FirstOrDefaultAsync(m => m.UserId == id);
             if (user == null)
             {
@@ -48,16 +45,13 @@ namespace VolunteerManagment.Controllers
         // GET: Users/Create
         public IActionResult Create()
         {
-            ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "RoleName");
             return View();
         }
 
         // POST: Users/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserId,FName,LName,Email,Password,Phone,RoleId,CreatedAt")] User user)
+        public async Task<IActionResult> Create([Bind("UserId,FName,LName,Email,Password,Phone,CreatedAt")] User user)
         {
             if (ModelState.IsValid)
             {
@@ -65,7 +59,6 @@ namespace VolunteerManagment.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "RoleName", user.RoleId);
             return View(user);
         }
 
@@ -82,16 +75,13 @@ namespace VolunteerManagment.Controllers
             {
                 return NotFound();
             }
-            ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "RoleName", user.RoleId);
             return View(user);
         }
 
         // POST: Users/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserId,FName,LName,Email,Password,Phone,RoleId,CreatedAt")] User user)
+        public async Task<IActionResult> Edit(int id, [Bind("UserId,FName,LName,Email,Password,Phone,CreatedAt")] User user)
         {
             if (id != user.UserId)
             {
@@ -118,7 +108,6 @@ namespace VolunteerManagment.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RoleId"] = new SelectList(_context.Roles, "RoleId", "RoleName", user.RoleId);
             return View(user);
         }
 
@@ -131,7 +120,6 @@ namespace VolunteerManagment.Controllers
             }
 
             var user = await _context.Users
-                .Include(u => u.Role)
                 .FirstOrDefaultAsync(m => m.UserId == id);
             if (user == null)
             {

@@ -27,9 +27,9 @@ namespace VolunteerManagment.Models
         [ForeignKey("CreatedBy")]
         public int CreatedBy { get; set; }
         public User Organizer { get; set; }
+
         public ICollection<Report> Reports { get; set; } = new List<Report>();
         public ICollection<VolunteerEvent> Volunteers { get; set; } = new List<VolunteerEvent>();
         public ICollection<EventTask> Tasks { get; set; } = new List<EventTask>();
-
     }
 }
