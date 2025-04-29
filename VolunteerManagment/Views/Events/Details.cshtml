@@ -73,9 +73,14 @@
                     <td>@volunteerEvent.User.UserName</td>
                     <td>@volunteerEvent.User.Email</td>
                     <td>
-                        <a asp-controller="Users" asp-action="UserTasks" asp-route-id="@volunteerEvent.User.UserId" class="btn btn-primary btn-sm">
+                        <a asp-controller="Users"
+                           asp-action="UserTasks"
+                           asp-route-userId="@volunteerEvent.User.UserId"
+                           asp-route-eventId="@Model.EventId"
+                           class="btn btn-primary btn-sm">
                             View Tasks
                         </a>
+
                     </td>
                 </tr>
             }
