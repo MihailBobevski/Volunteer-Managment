@@ -19,18 +19,34 @@ namespace VolunteerManagment.Controllers
 
         public IActionResult Index()
         {
+            var userIdStr = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userIdStr)) return RedirectToAction("Login", "User");
+
+            int userId = int.Parse(userIdStr);
             var role = HttpContext.Session.GetString("Role");
-            if (role != "User")
-                return RedirectToAction("Login", "User");
 
-            var activeEvents = _context.Events
-                .Where(e => e.Status == "Active")
-                .Include(e => e.Tasks)
-                .ThenInclude(t => t.User)
-                .ToList();
+            List<Event> events;
 
-            return View(activeEvents);
+            if (role == "User" || role == "Organizer")
+            {
+                events = _context.VolunteersEvents
+                    .Where(ve => ve.UserId == userId && ve.Event.Status == "Active")
+                    .Include(ve => ve.Event)
+                    .ThenInclude(e => e.Organizer)
+                    .Include(ve => ve.Event.Tasks)
+                    .ThenInclude(t => t.User)
+                    .Select(ve => ve.Event)
+                    .ToList();
+            }
+            else
+            {
+                events = new List<Event>();
+            }
+
+            return View(events);
         }
+
+
 
         public IActionResult Details(int id)
         {
@@ -56,6 +72,47 @@ namespace VolunteerManagment.Controllers
             var success = _taskService.AssignTaskToUser(taskId, eventId, username);
 
             return RedirectToAction("Details", new { id = eventId });
+        }
+
+        public IActionResult PastEvents()
+        {
+            var userIdStr = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userIdStr)) return RedirectToAction("Login", "User");
+
+            int userId = int.Parse(userIdStr);
+
+            var events = _context.VolunteersEvents
+                .Where(ve => ve.UserId == userId && ve.Event.Status == "Completed")
+                .Include(ve => ve.Event)
+                .ThenInclude(e => e.Organizer)
+                .Select(ve => ve.Event)
+                .Distinct()
+                .ToList();
+
+            ViewBag.Role = HttpContext.Session.GetString("Role");
+            return View(events);
+        }
+
+
+        public IActionResult Volunteer()
+        {
+            var userIdStr = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userIdStr)) return RedirectToAction("Login", "User");
+
+            int userId = int.Parse(userIdStr);
+
+            var events = _context.Events
+                .Include(e => e.Tasks)
+                .Include(e => e.Organizer)
+                .Where(e =>
+                        e.Status == "Active" &&
+                        e.CreatedBy != userId && 
+                        !e.Tasks.Any(t => t.AssignedTo == userId) 
+                )
+                .ToList();
+
+            ViewBag.Role = HttpContext.Session.GetString("Role");
+            return View(events);
         }
     }
 }

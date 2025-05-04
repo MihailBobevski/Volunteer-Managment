@@ -22,36 +22,60 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
                        @if(Role is null){
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Register">Register</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Login">Login</a>
-                        </li>
+                           <li class="nav-item">
+                               <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Login">Login</a>
+                           </li>
+                           <li class="nav-item">
+                               <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Register">Register</a>
+                           </li>
                        }
                         @if (Role == "User")
                         {
-                            <a class="nav-link text-dark" asp-area="" asp-controller="OrganizerRequest" asp-action="Apply">Become Organizer</a>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Volunteer Events</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="PastEvents">Past Events</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Volunteer">Volunteer</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="OrganizerRequest" asp-action="Apply">Become Organizer</a>
+                            </li>
+                            
                         }
                         @if (Role == "Organizer")
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Index">Users</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Volunteer Events</a>
                             </li>
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Events" asp-action="Index">Events</a>
-                            <li></li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="PastEvents">Past Events</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Volunteer">Volunteer</a>
+                            </li>
+                            <li>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Events" asp-action="Index">Events</a>
+                            </li>
                         }
                         @if (Role == "Admin")
                         {
+                            <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Requests">Organizer Requests</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Index">Users</a>
+                            </li>
                         }
 
                         @if (Context.Session.GetString("Role") != null)
                         {
+                            <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="User" asp-action="Logout">Logout</a>
+                            </li>
                         }
                     </ul>
                 </div>

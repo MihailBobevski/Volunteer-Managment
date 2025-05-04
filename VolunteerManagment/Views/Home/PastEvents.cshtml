@@ -1,14 +1,14 @@
-﻿@model List<VolunteerManagment.Models.Event>
+@model List<VolunteerManagment.Models.Event>
 
 @{
     var role = ViewBag.Role as string;
 }
 
-<h2>Active Events</h2>
+<h2>Past Events You Participated In</h2>
 
 @if (!Model.Any())
 {
-    <p>No active events at the moment.</p>
+    <p>You haven't participated in any completed events yet.</p>
 }
 else
 {
@@ -23,7 +23,7 @@ else
                         <p><strong>Date:</strong> @ev.Date.ToShortDateString()</p>
                         <p><strong>Location:</strong> @ev.Location</p>
                         <p><strong>Organizer:</strong> @ev.Organizer?.UserName</p>
-                        <a href="@Url.Action("Details", "Home", new { id = ev.EventId })" class="btn btn-primary">View</a>
+                        <a href="@Url.Action("Details", "Home", new { id = ev.EventId })" class="btn btn-outline-secondary btn-sm">View Details</a>
                     </div>
                 </div>
             </div>

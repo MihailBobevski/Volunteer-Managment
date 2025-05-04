@@ -68,16 +68,18 @@ namespace VolunteerManagment.Controllers
                     if(User.RoleId == 1)
                     {
                         HttpContext.Session.SetString("Role","User");
+                        return RedirectToAction("Index", "Home");
                     }
                     if (User.RoleId == 2)
                     {
                         HttpContext.Session.SetString("Role", "Organizer");
+                        return RedirectToAction("Index", "Home");
                     }
                     if (User.RoleId == 3)
                     {
                         HttpContext.Session.SetString("Role", "Admin");
+                        return RedirectToAction("AdminDash", "Admin");
                     }
-                    return RedirectToAction("Index", "Home");
                 }
             }
 

@@ -1,0 +1,87 @@
+@model List<VolunteerManagment.Models.OrganizerRequest>
+
+<h1>Organizer Requests</h1>
+
+@*Pending*@
+<h2>Pending Requests</h2>
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th>User</th>
+        <th>Letter</th>
+        <th>Date</th>
+        <th>Status</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var req in Model.Where(r => r.Status == "Pending"))
+    {
+        <tr>
+            <td>@req.User.UserName (@req.User.Email)</td>
+            <td>@req.MotivationalLetter</td>
+            <td>@req.DateRequested.ToShortDateString()</td>
+            <td>@req.Status</td>
+            <td>
+                    <form asp-action="Accept" asp-controller="Admin" method="post" style="display: inline">
+                        <input type="hidden" name="id" value="@req.RequestId" />
+                        <button type="submit" class="btn btn-success btn-sm">Accept</button>
+                    </form>
+                    <form asp-action="Reject" asp-controller="Admin" method="post" style="display: inline">
+                        <input type="hidden" name="id" value="@req.RequestId" />
+                        <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                    </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+
+@*Accepted*@
+<h2>Pending Requests</h2>
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th>User</th>
+        <th>Letter</th>
+        <th>Date</th>
+        <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var req in Model.Where(r => r.Status == "Accepted"))
+    {
+        <tr>
+            <td>@req.User.UserName (@req.User.Email)</td>
+            <td>@req.MotivationalLetter</td>
+            <td>@req.DateRequested.ToShortDateString()</td>
+            <td>@req.Status</td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+@*Rejected*@
+<h2>Pending Requests</h2>
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th>User</th>
+        <th>Letter</th>
+        <th>Date</th>
+        <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var req in Model.Where(r => r.Status == "Rejected"))
+    {
+        <tr>
+            <td>@req.User.UserName (@req.User.Email)</td>
+            <td>@req.MotivationalLetter</td>
+            <td>@req.DateRequested.ToShortDateString()</td>
+            <td>@req.Status</td>
+        </tr>
+    }
+    </tbody>
+</table>

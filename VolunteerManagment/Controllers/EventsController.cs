@@ -22,9 +22,19 @@ namespace VolunteerManagment.Controllers
         // GET: Events
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Events.Include(@event => @event.Organizer);
-            return View(await applicationDbContext.ToListAsync());
+            var userIdStr = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userIdStr)) return RedirectToAction("Login", "User");
+
+            int userId = int.Parse(userIdStr);
+
+            var events = await _context.Events
+                .Include(e => e.Organizer)
+                .Where(e => e.CreatedBy == userId)
+                .ToListAsync();
+
+            return View(events);
         }
+
 
         // GET: Events/Details/5
         public async Task<IActionResult> Details(int? id)
