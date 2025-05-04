@@ -24,6 +24,10 @@ namespace VolunteerManagment.Models
         [Required]
         public DateTime Date { get; set; }
 
+        [Required]
+        [MaxLength(20)]
+        public string Status { get; set; } = "Active";
+
         [ForeignKey("CreatedBy")]
         public int CreatedBy { get; set; }
         public User Organizer { get; set; }

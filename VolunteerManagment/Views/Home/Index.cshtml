@@ -1,8 +1,27 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model List<VolunteerManagment.Models.Event>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<h2>Active Events</h2>
+
+@if (!Model.Any())
+{
+    <p>No active events at the moment.</p>
+}
+else
+{
+    <div class="row">
+        @foreach (var ev in Model)
+        {
+            <div class="col-md-4 mb-3">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">@ev.Title</h5>
+                        <p class="card-text">@ev.Description</p>
+                        <p><strong>Date:</strong> @ev.Date.ToShortDateString()</p>
+                        <p><strong>Location:</strong> @ev.Location</p>
+                        <a href="@Url.Action("Details", "Home", new { id = ev.EventId })" class="btn btn-primary">View</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

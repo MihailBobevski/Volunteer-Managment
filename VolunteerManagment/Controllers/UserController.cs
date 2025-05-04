@@ -61,6 +61,10 @@ namespace VolunteerManagment.Controllers
                 if(_db.Users.Any(u => u.UserName == user.UserName && u.Password == HashPassword(user.Password)))
                 {
                     var User = _db.Users.FirstOrDefault(u => u.UserName == user.UserName && u.Password == HashPassword(user.Password));
+                    HttpContext.Session.SetString("UserId",User.UserId.ToString());
+                    HttpContext.Session.SetString("Username",User.UserName);
+                    
+                    
                     if(User.RoleId == 1)
                     {
                         HttpContext.Session.SetString("Role","User");

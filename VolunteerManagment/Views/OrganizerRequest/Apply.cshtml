@@ -1,0 +1,19 @@
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@{
+    ViewBag.Title = "Apply for Organizer";
+}
+
+<h2>Apply for Organizer</h2>
+
+@if (ViewBag.Message != null)
+{
+    <div class="alert alert-info">@ViewBag.Message</div>
+}
+
+<form method="post">
+    <div class="form-group">
+        <label for="motivationalLetter">Motivational Letter</label>
+        <textarea id="motivationalLetter" name="motivationalLetter" class="form-control" rows="6" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary mt-2">Submit Application</button>
+</form>

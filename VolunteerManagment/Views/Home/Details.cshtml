@@ -1,0 +1,61 @@
+@model VolunteerManagment.Models.Event
+
+@{
+    var username = Context.Session.GetString("Username");
+    var role = Context.Session.GetString("Role");
+
+    var filteredTasks = Model.Tasks
+        .Where(t => t.User?.UserName == username || (t.User == null && role == "User"))
+        .ToList();
+}
+
+<h2>@Model.Title</h2>
+<p>@Model.Description</p>
+<p><strong>Date:</strong> @Model.Date.ToShortDateString()</p>
+<p><strong>Location:</strong> @Model.Location</p>
+
+<h4 class="mt-4">Your Tasks</h4>
+
+@if (!filteredTasks.Any())
+{
+    <p>You have no assigned tasks for this event.</p>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Assigned To</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var task in filteredTasks)
+        {
+            <tr>
+                <td>@task.Title</td>
+                <td>@task.Description</td>
+                <td>@(task.User?.UserName ?? "Unassigned")</td>
+                <td>@task.Status</td>
+                <td>
+                    @if (task.User == null && role == "User")
+                    {
+                        <form asp-controller="Home" asp-action="SignUpForTask" method="post">
+                            <input type="hidden" name="taskId" value="@task.TaskId" />
+                            <input type="hidden" name="eventId" value="@Model.EventId" />
+                            <button type="submit" class="btn btn-success btn-sm">Sign Up</button>
+                        </form>
+                    }
+                    else if (task.User != null && task.User.UserName == username)
+                    {
+                        <span class="text-success">You're assigned</span>
+                    }
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

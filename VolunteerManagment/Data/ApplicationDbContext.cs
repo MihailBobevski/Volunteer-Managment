@@ -13,6 +13,7 @@ namespace VolunteerManagment2.Data
         public DbSet<VolunteerEvent> VolunteersEvents { get; set; }
         public DbSet<EventTask> Tasks { get; set; }
         public DbSet<Report> Reports { get; set; }
+        public DbSet<OrganizerRequest> OrganizerRequests { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
