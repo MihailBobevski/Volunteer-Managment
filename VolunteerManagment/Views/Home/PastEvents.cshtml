@@ -2,13 +2,14 @@
 
 @{
     var role = ViewBag.Role as string;
+    ViewData["Title"] = "Past Events You Participated In";
 }
 
-<h2>Past Events You Participated In</h2>
+<h2>@ViewData["Title"]</h2>
 
 @if (!Model.Any())
 {
-    <p>You haven't participated in any completed events yet.</p>
+    <p>You haven't participated in any past events yet.</p>
 }
 else
 {
@@ -16,14 +17,23 @@ else
         @foreach (var ev in Model)
         {
             <div class="col-md-4 mb-3">
-                <div class="card shadow-sm">
+                <div class="card shadow-sm h-100">
                     <div class="card-body">
                         <h5 class="card-title">@ev.Title</h5>
                         <p class="card-text">@ev.Description</p>
                         <p><strong>Date:</strong> @ev.Date.ToShortDateString()</p>
                         <p><strong>Location:</strong> @ev.Location</p>
-                        <p><strong>Organizer:</strong> @ev.Organizer?.UserName</p>
-                        <a href="@Url.Action("Details", "Home", new { id = ev.EventId })" class="btn btn-outline-secondary btn-sm">View Details</a>
+                        <p><strong>Organizer:</strong> @(ev.Organizer?.UserName ?? "Unknown")</p>
+                        <p><strong>Status:</strong> @ev.Status</p>
+
+                        @if (ev.Status == "Cancelled")
+                        {
+                            <div class="alert alert-danger mt-2">
+                                This event was cancelled.
+                            </div>
+                        }
+
+                        <a href="@Url.Action("Details", "Home", new { id = ev.EventId })" class="btn btn-outline-secondary btn-sm mt-2">View Details</a>
                     </div>
                 </div>
             </div>

@@ -10,6 +10,14 @@
 <p><strong>Date:</strong> @Model.Date.ToShortDateString()</p>
 <p><strong>Location:</strong> @Model.Location</p>
 <p><strong>Status:</strong> @Model.Status</p>
+<p><strong>Organizer:</strong> @Model.Organizer?.UserName (@Model.Organizer?.Email)</p>
+
+@if (Model.Status == "Cancelled")
+{
+    <div class="alert alert-danger mt-3">
+        This event has been cancelled. Signups are disabled.
+    </div>
+}
 
 <h4 class="mt-4">Tasks</h4>
 
@@ -21,12 +29,12 @@ else
 {
     <table class="table table-bordered">
         <thead>
-        <tr>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Status</th>
-            <th>Action</th>
-        </tr>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
         </thead>
         <tbody>
         @foreach (var task in Model.Tasks)
@@ -36,7 +44,7 @@ else
                 <td>@task.Description</td>
                 <td>@task.Status</td>
                 <td>
-                    @if (task.AssignedTo == null && Model.Status == "Active" && role == "User")
+                    @if (Model.Status == "Active" && task.AssignedTo == null && (role == "User" || role == "Organizer"))
                     {
                         <form asp-controller="Home" asp-action="SignUpForTask" method="post">
                             <input type="hidden" name="taskId" value="@task.TaskId" />
@@ -46,14 +54,9 @@ else
                     }
                     else if (task.AssignedTo == userId)
                     {
-                        if (Model.Status == "Completed")
-                        {
-                            <span class="text-muted">You were assigned</span>
-                        }
-                        else
-                        {
-                            <span class="text-success">You're assigned</span>
-                        }
+                        <span class="text-success">
+                            @(Model.Status == "Completed" ? "You were assigned" : "You're assigned")
+                        </span>
                     }
                     else if (task.User != null)
                     {

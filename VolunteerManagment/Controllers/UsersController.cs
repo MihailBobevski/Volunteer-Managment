@@ -66,8 +66,51 @@ namespace VolunteerManagment.Controllers
                 return NotFound();
             }
 
+            ViewBag.IsOrganizer = HttpContext.Session.GetString("Role") == "Organizer";
+
             return View(tasks);
         }
+
+        
+        [HttpPost]
+        public IActionResult UpdateTaskStatus(int taskId, int userId, int eventId, string status)
+        {
+            var task = _context.Tasks.FirstOrDefault(t => t.TaskId == taskId);
+
+            if (task != null)
+            {
+                task.Status = status;
+                _context.SaveChanges();
+
+                if (status == "Completed")
+                {
+                    var volunteer = _context.VolunteersEvents
+                        .FirstOrDefault(ve => ve.UserId == userId && ve.EventId == eventId);
+
+                    if (volunteer != null)
+                    {
+                        volunteer.HoursContributed += 1;
+
+                        // Optional: Mark user as "Completed" if all tasks are done
+                        var totalTasks = _context.Tasks
+                            .Count(t => t.EventId == eventId && t.AssignedTo == userId);
+                        var completedTasks = _context.Tasks
+                            .Count(t => t.EventId == eventId && t.AssignedTo == userId && t.Status == "Completed");
+
+                        if (totalTasks > 0 && completedTasks == totalTasks)
+                        {
+                            volunteer.Status = "Completed";
+                        }
+
+                        _context.SaveChanges();
+                    }
+                }
+            }
+
+            return RedirectToAction("UserTasks", new { userId, eventId });
+        }
+
+
 
 
 

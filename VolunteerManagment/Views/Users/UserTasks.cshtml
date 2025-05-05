@@ -1,16 +1,40 @@
 ﻿@model List<VolunteerManagment.Models.EventTask>
 
+@{
+    var role = Context.Session.GetString("Role");
+    var userId = int.Parse(Context.Session.GetString("UserId"));
+    var isOrganizer = ViewBag.IsOrganizer != null && (bool)ViewBag.IsOrganizer;
+    var eventId = Model.FirstOrDefault()?.EventId ?? 0;
+    var total = Model.Count;
+    var completed = Model.Count(t => t.Status == "Completed");
+}
+
 <h2>User's Tasks for this Event</h2>
 
 @if (Model.Any())
 {
-    <table class="table">
+    <p class="mb-2">
+        @if (total > 0 && completed == total)
+        {
+            <span class="text-success">✔ All tasks completed</span>
+        }
+        else
+        {
+            <span class="text-muted">@completed / @total tasks completed</span>
+        }
+    </p>
+
+    <table class="table table-bordered">
         <thead>
             <tr>
                 <th>Task Title</th>
                 <th>Description</th>
                 <th>Status</th>
                 <th>Deadline</th>
+                @if (isOrganizer)
+                {
+                    <th>Change Status</th>
+                }
             </tr>
         </thead>
         <tbody>
@@ -21,6 +45,22 @@
                     <td>@task.Description</td>
                     <td>@task.Status</td>
                     <td>@task.Deadline.ToShortDateString()</td>
+
+                    @if (isOrganizer)
+                    {
+                        <td>
+                            <form asp-action="UpdateTaskStatus" asp-controller="Users" method="post" style="margin: 0;">
+                                <input type="hidden" name="taskId" value="@task.TaskId" />
+                                <input type="hidden" name="userId" value="@task.AssignedTo" />
+                                <input type="hidden" name="eventId" value="@task.EventId" />
+                                <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
+                                    <option value="Pending" selected="@(task.Status == "Pending" ? "selected" : null)">Pending</option>
+                                    <option value="Completed" selected="@(task.Status == "Completed" ? "selected" : null)">Completed</option>
+                                    <option value="Cancelled" selected="@(task.Status == "Cancelled" ? "selected" : null)">Cancelled</option>
+                                </select>
+                            </form>
+                        </td>
+                    }
                 </tr>
             }
         </tbody>
@@ -30,3 +70,5 @@ else
 {
     <p>No tasks found for this user in this event.</p>
 }
+
+<a asp-controller="Events" asp-action="Details" asp-route-id="@eventId" class="btn btn-secondary mt-3">← Back to Event</a>

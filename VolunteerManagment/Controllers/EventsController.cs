@@ -45,10 +45,11 @@ namespace VolunteerManagment.Controllers
             }
 
             var @event = await _context.Events
-           .Include(e => e.Organizer)
-           .Include(e => e.Volunteers)
-           .ThenInclude(ve => ve.User)
-           .FirstOrDefaultAsync(m => m.EventId == id);
+                .Include(e => e.Organizer)
+                .Include(e => e.Volunteers)
+                .ThenInclude(ve => ve.User)
+                .Include(e => e.Tasks) 
+                .FirstOrDefaultAsync(m => m.EventId == id);
 
 
             if (@event == null)
@@ -58,6 +59,34 @@ namespace VolunteerManagment.Controllers
 
             return View(@event);
         }
+        
+        [HttpPost]
+        public IActionResult CompleteEvent(int eventId)
+        {
+            var ev = _context.Events.FirstOrDefault(e => e.EventId == eventId);
+            if (ev != null)
+            {
+                ev.Status = "Completed";
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("Details", new { id = eventId });
+        }
+        [HttpPost]
+        public IActionResult CancelEvent(int eventId)
+        {
+            var ev = _context.Events.FirstOrDefault(e => e.EventId == eventId);
+            if (ev != null && ev.Status == "Active")
+            {
+                ev.Status = "Cancelled";
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("Details", new { id = eventId });
+        }
+
+
+
 
 
         // GET: Events/Create

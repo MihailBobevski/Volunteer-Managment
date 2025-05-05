@@ -2,9 +2,9 @@
 
 @{
     ViewData["Title"] = "Event Details";
-    var userRole = Context.Session.GetString("Role");
     var userId = int.Parse(Context.Session.GetString("UserId"));
-    var isOrganizer = Model.CreatedBy == userId;
+    var isOrganizer = userId == Model.CreatedBy;
+    var allReady = true;
 }
 
 <h2>@Model.Title</h2>
@@ -30,23 +30,23 @@
     <dd class="col-sm-9">@Model.Organizer?.UserName (@Model.Organizer?.Email)</dd>
 </dl>
 
+@if (Model.Status == "Cancelled")
+{
+    <div class="alert alert-danger">
+        This event has been cancelled. Tasks and signups are disabled.
+    </div>
+}
+
 @if (isOrganizer)
 {
     <div class="mb-3">
         <a asp-action="Edit" asp-route-id="@Model.EventId" class="btn btn-warning">Edit</a>
         <a asp-action="Delete" asp-route-id="@Model.EventId" class="btn btn-danger">Delete</a>
-        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
     </div>
 }
-else
-{
-    <div class="mb-3">
-        <a asp-action="Index" class="btn btn-secondary">Back</a>
-    </div>
-}
+<a asp-action="Index" class="btn btn-secondary mb-3">Back to List</a>
 
 <hr />
-
 <h4>Volunteers</h4>
 
 @if (Model.Volunteers != null && Model.Volunteers.Any())
@@ -56,30 +56,104 @@ else
             <tr>
                 <th>Username</th>
                 <th>Email</th>
-                <th></th>
+                <th>Status</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var v in Model.Volunteers)
-            {
-                <tr>
-                    <td>@v.User.UserName</td>
-                    <td>@v.User.Email</td>
-                    <td>
-                        <a asp-controller="Users"
-                           asp-action="UserTasks"
-                           asp-route-userId="@v.User.UserId"
-                           asp-route-eventId="@Model.EventId"
-                           class="btn btn-sm btn-outline-primary">
-                            View Tasks
-                        </a>
-                    </td>
-                </tr>
-            }
+        @foreach (var v in Model.Volunteers)
+        {
+            var userTasks = Model.Tasks.Where(t => t.AssignedTo == v.User.UserId).ToList();
+            var total = userTasks.Count;
+            var completed = userTasks.Count(t => t.Status?.Trim().Equals("Completed", StringComparison.OrdinalIgnoreCase) == true);
+
+            bool ready = total > 0 && completed == total;
+            if (!ready) { allReady = false; }
+
+            <tr>
+                <td>@v.User.UserName</td>
+                <td>@v.User.Email</td>
+                <td>
+                    @if (total == 0)
+                    {
+                        <span class="text-muted">No tasks assigned</span>
+                    }
+                    else if (ready)
+                    {
+                        <span class="text-success">✔ All tasks done</span>
+                    }
+                    else
+                    {
+                        <span>@completed / @total tasks done</span>
+                    }
+                </td>
+                <td>
+                    <a asp-controller="Users"
+                       asp-action="UserTasks"
+                       asp-route-userId="@v.User.UserId"
+                       asp-route-eventId="@Model.EventId"
+                       class="btn btn-sm btn-outline-primary">
+                        View Tasks
+                    </a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+    @if (isOrganizer && allReady && Model.Status != "Completed")
+    {
+        <form asp-action="CompleteEvent" asp-controller="Events" method="post">
+            <input type="hidden" name="eventId" value="@Model.EventId" />
+            <button class="btn btn-success mt-2">✔ Complete Event</button>
+        </form>
+    }
+}
+else
+{
+    <p>No volunteers for this event.</p>
+}
+
+@if (isOrganizer && Model.Status == "Active")
+{
+    <form asp-action="CancelEvent" asp-controller="Events" method="post" class="mt-2">
+        <input type="hidden" name="eventId" value="@Model.EventId" />
+        <button class="btn btn-outline-danger">✖ Cancel Event</button>
+    </form>
+}
+
+<hr />
+<h4>Unassigned Tasks</h4>
+
+@{
+    var unassignedTasks = Model.Tasks.Where(t => t.AssignedTo == null).ToList();
+}
+
+@if (unassignedTasks.Any())
+{
+    <table class="table table-sm table-striped">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Deadline</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var task in unassignedTasks)
+        {
+            <tr>
+                <td>@task.Title</td>
+                <td>@task.Description</td>
+                <td>@task.Status</td>
+                <td>@task.Deadline.ToShortDateString()</td>
+            </tr>
+        }
         </tbody>
     </table>
 }
 else
 {
-    <p>No volunteers yet.</p>
+    <p>All tasks are assigned.</p>
 }
