@@ -58,5 +58,17 @@ public class AdminController : Controller
         return RedirectToAction("Requests");
     }
     
+    [HttpGet]
+    public IActionResult MotivationalLetter(int id)
+    {
+        var request = _context.OrganizerRequests
+            .Include(r => r.User)
+            .FirstOrDefault(r => r.RequestId == id);
+
+        if (request == null)
+            return NotFound();
+
+        return View(request);
+    }
     
 }

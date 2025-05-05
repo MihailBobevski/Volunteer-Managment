@@ -70,5 +70,11 @@ else
 {
     <p>No tasks found for this user in this event.</p>
 }
-
-<a asp-controller="Events" asp-action="Details" asp-route-id="@eventId" class="btn btn-secondary mt-3">← Back to Event</a>
+@if (role == "Organizer")
+{
+    <a asp-controller="Events" asp-action="Details" asp-route-id="@eventId" class="btn btn-secondary mt-3">← Back to Event</a>
+}
+@if (role == "Admin")
+{
+    <a asp-controller="Users" asp-action="Details" asp-route-id="@ViewBag.ViewedUserId" class="btn btn-secondary mt-3">← Back to User</a>
+}

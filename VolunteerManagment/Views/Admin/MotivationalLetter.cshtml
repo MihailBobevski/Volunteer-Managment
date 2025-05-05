@@ -1,0 +1,20 @@
+@model VolunteerManagment.Models.OrganizerRequest
+
+@{
+    ViewData["Title"] = "Motivational Letter";
+}
+
+<h2>Motivational Letter</h2>
+
+<div class="card mt-3">
+    <div class="card-header">
+        From: @Model.User.UserName (@Model.User.Email)
+    </div>
+    <div class="card-body">
+        <p><strong>Date Submitted:</strong> @Model.DateRequested.ToShortDateString()</p>
+        <hr />
+        <pre style="white-space: pre-wrap;">@Model.MotivationalLetter</pre>
+    </div>
+</div>
+
+<a asp-action="Requests" asp-controller="Admin" class="btn btn-secondary mt-3">← Back to Requests</a>

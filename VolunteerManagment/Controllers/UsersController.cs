@@ -67,9 +67,11 @@ namespace VolunteerManagment.Controllers
             }
 
             ViewBag.IsOrganizer = HttpContext.Session.GetString("Role") == "Organizer";
+            ViewBag.ViewedUserId = userId; 
 
             return View(tasks);
         }
+
 
         
         [HttpPost]

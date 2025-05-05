@@ -19,7 +19,7 @@
     {
         <tr>
             <td>@req.User.UserName (@req.User.Email)</td>
-            <td>@req.MotivationalLetter</td>
+            <td><a asp-controller="Admin" asp-action="MotivationalLetter" asp-route-id="@req.RequestId" class="btn btn-sm btn-info">View</a></td>
             <td>@req.DateRequested.ToShortDateString()</td>
             <td>@req.Status</td>
             <td>
@@ -39,7 +39,7 @@
 
 
 @*Accepted*@
-<h2>Pending Requests</h2>
+<h2>Accepted Requests</h2>
 <table class="table table-bordered">
     <thead>
     <tr>
@@ -54,7 +54,7 @@
     {
         <tr>
             <td>@req.User.UserName (@req.User.Email)</td>
-            <td>@req.MotivationalLetter</td>
+            <td><a asp-controller="Admin" asp-action="MotivationalLetter" asp-route-id="@req.RequestId" class="btn btn-sm btn-info">View</a></td>
             <td>@req.DateRequested.ToShortDateString()</td>
             <td>@req.Status</td>
         </tr>
@@ -63,7 +63,7 @@
 </table>
 
 @*Rejected*@
-<h2>Pending Requests</h2>
+<h2>Rejected Requests</h2>
 <table class="table table-bordered">
     <thead>
     <tr>
@@ -78,7 +78,7 @@
     {
         <tr>
             <td>@req.User.UserName (@req.User.Email)</td>
-            <td>@req.MotivationalLetter</td>
+            <td><a asp-controller="Admin" asp-action="MotivationalLetter" asp-route-id="@req.RequestId" class="btn btn-sm btn-info">View</a></td>
             <td>@req.DateRequested.ToShortDateString()</td>
             <td>@req.Status</td>
         </tr>
