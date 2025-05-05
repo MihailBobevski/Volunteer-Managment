@@ -5,6 +5,7 @@
     var userId = int.Parse(Context.Session.GetString("UserId"));
     var isOrganizer = userId == Model.CreatedBy;
     var allReady = true;
+    bool hasUnassignedOrIncompleteTasks = Model.Tasks.Any(t => t.AssignedTo == null || !t.Status?.Trim().Equals("Completed", StringComparison.OrdinalIgnoreCase) == true);
 }
 
 <h2>@Model.Title</h2>
@@ -101,13 +102,15 @@
         </tbody>
     </table>
 
-    @if (isOrganizer && allReady && Model.Status != "Completed")
+   
+    if (isOrganizer && !hasUnassignedOrIncompleteTasks && Model.Status != "Completed")
     {
         <form asp-action="CompleteEvent" asp-controller="Events" method="post">
             <input type="hidden" name="eventId" value="@Model.EventId" />
             <button class="btn btn-success mt-2">✔ Complete Event</button>
         </form>
     }
+    
 }
 else
 {
