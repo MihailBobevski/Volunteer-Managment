@@ -84,89 +84,70 @@ namespace VolunteerManagment.Controllers
 
             return RedirectToAction("Details", new { id = eventId });
         }
-
-
-
-
-
-        // GET: Events/Create
+        
+        [HttpGet]
         public IActionResult Create()
         {
-            ViewData["CreatedBy"] = new SelectList(_context.Users, "UserId", "Email");
             return View();
         }
 
-        // POST: Events/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("EventId,Title,Description,Category,Location,Date,CreatedBy")] Event @event)
+        public async Task<IActionResult> Create(Event @event)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(@event);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["CreatedBy"] = new SelectList(_context.Users, "UserId", "Email", @event.CreatedBy);
-            return View(@event);
+            var userIdStr = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userIdStr))
+                return RedirectToAction("Login", "User");
+
+            @event.CreatedBy = int.Parse(userIdStr);
+            @event.Status = "Active";
+
+            if (!ModelState.IsValid)
+                return View(@event);
+
+            _context.Events.Add(@event);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: Events/Edit/5
+        [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var @event = await _context.Events.FindAsync(id);
             if (@event == null)
-            {
                 return NotFound();
-            }
-            ViewData["CreatedBy"] = new SelectList(_context.Users, "UserId", "Email", @event.CreatedBy);
+
             return View(@event);
         }
 
-        // POST: Events/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("EventId,Title,Description,Category,Location,Date,CreatedBy")] Event @event)
+        public async Task<IActionResult> Edit(int id, Event updatedEvent)
         {
-            if (id != @event.EventId)
-            {
+            if (id != updatedEvent.EventId)
                 return NotFound();
-            }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(@event);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!EventExists(@event.EventId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["CreatedBy"] = new SelectList(_context.Users, "UserId", "Email", @event.CreatedBy);
-            return View(@event);
+            var existingEvent = await _context.Events.AsNoTracking().FirstOrDefaultAsync(e => e.EventId == id);
+            if (existingEvent == null)
+                return NotFound();
+
+            updatedEvent.CreatedBy = existingEvent.CreatedBy;
+            updatedEvent.Status = existingEvent.Status;
+
+            if (!ModelState.IsValid)
+                return View(updatedEvent);
+
+            _context.Events.Update(updatedEvent);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: Events/Delete/5
+
+
+        [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -185,21 +166,27 @@ namespace VolunteerManagment.Controllers
             return View(@event);
         }
 
-        // POST: Events/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var @event = await _context.Events.FindAsync(id);
+            var @event = await _context.Events
+                .Include(e => e.Tasks)
+                .Include(e => e.Volunteers)
+                .FirstOrDefaultAsync(e => e.EventId == id);
+
             if (@event != null)
             {
+                _context.Tasks.RemoveRange(@event.Tasks);
+                _context.VolunteersEvents.RemoveRange(@event.Volunteers);
                 _context.Events.Remove(@event);
+
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
+        
         private bool EventExists(int id)
         {
             return _context.Events.Any(e => e.EventId == id);

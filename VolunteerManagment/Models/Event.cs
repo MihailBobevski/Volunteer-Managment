@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace VolunteerManagment.Models
 {
@@ -30,6 +31,7 @@ namespace VolunteerManagment.Models
 
         [ForeignKey("CreatedBy")]
         public int CreatedBy { get; set; }
+        [ValidateNever]
         public User Organizer { get; set; }
 
         public ICollection<Report> Reports { get; set; } = new List<Report>();
