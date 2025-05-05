@@ -32,6 +32,12 @@ else
                                 This event was cancelled.
                             </div>
                         }
+                        @if (ev.Status == "Completed")
+                        {
+                            <div class="alert alert-success mt-2">
+                                This event was completed!
+                            </div>
+                        }
 
                         <a href="@Url.Action("Details", "Home", new { id = ev.EventId })" class="btn btn-outline-secondary btn-sm mt-2">View Details</a>
                     </div>

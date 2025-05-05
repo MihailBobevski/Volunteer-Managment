@@ -38,6 +38,13 @@
     </div>
 }
 
+@if (Model.Status == "Completed")
+{
+    <div class="alert alert-success">
+        This event has been completed. All tasks were finished.
+    </div>
+}
+
 @if (isOrganizer)
 {
     <div class="mb-3">
@@ -47,6 +54,11 @@
 }
 <a asp-action="Index" class="btn btn-secondary mb-3">Back to List</a>
 
+<hr />
+@if (isOrganizer && Model.Status == "Active")
+{
+    <a asp-controller="Tasks" asp-action="Add" asp-route-eventId="@Model.EventId" class="btn btn-primary mb-3">➕ Add Task</a>
+}
 <hr />
 <h4>Volunteers</h4>
 
@@ -103,7 +115,7 @@
     </table>
 
    
-    if (isOrganizer && !hasUnassignedOrIncompleteTasks && Model.Status != "Completed")
+    if (isOrganizer && !hasUnassignedOrIncompleteTasks && Model.Status != "Completed" && Model.Status != "Cancelled")
     {
         <form asp-action="CompleteEvent" asp-controller="Events" method="post">
             <input type="hidden" name="eventId" value="@Model.EventId" />

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace VolunteerManagment.Models
 {
@@ -10,10 +11,13 @@ namespace VolunteerManagment.Models
 
         [ForeignKey("EventId")]
         public int EventId { get; set; }
+        
+        [ValidateNever]
         public Event Event { get; set; }
 
         [ForeignKey("AssignedTo")]
         public int? AssignedTo { get; set; }
+        [ValidateNever]
         public User User { get; set; }
 
         [Required]
@@ -23,7 +27,7 @@ namespace VolunteerManagment.Models
         public string Description { get; set; }
 
         [Required]
-        public string Status { get; set; }
+        public string Status { get; set; } = "Pending";
 
         public DateTime Deadline { get; set; }
     }

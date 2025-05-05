@@ -18,6 +18,12 @@
         This event has been cancelled. Signups are disabled.
     </div>
 }
+@if (Model.Status == "Completed")
+{
+    <div class="alert alert-success">
+        This event has been completed. All tasks were finished.
+    </div>
+}
 
 <h4 class="mt-4">Tasks</h4>
 

@@ -7,15 +7,6 @@
 <h1>Create</h1>
 
 <h4>Event</h4>
-@if (!ViewData.ModelState.IsValid)
-{
-    <div class="text-danger">
-        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-        {
-            <p>@error.ErrorMessage</p>
-        }
-    </div>
-}
 
 <hr />
 <div class="row">

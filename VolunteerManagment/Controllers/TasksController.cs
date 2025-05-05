@@ -25,12 +25,25 @@ namespace VolunteerManagment.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(EventTask task)
         {
+            Console.WriteLine("🔧 Add Task triggered");
+
             if (ModelState.IsValid)
             {
+                Console.WriteLine($"✅ Valid Task: {task.Title}, EventId={task.EventId}");
+
                 _context.Tasks.Add(task);
                 await _context.SaveChangesAsync();
+
+                Console.WriteLine("🟢 Task saved to DB");
                 return RedirectToAction("Details", "Events", new { id = task.EventId });
             }
+
+            Console.WriteLine("❌ Invalid Task ModelState:");
+            foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+            {
+                Console.WriteLine($" - {error.ErrorMessage}");
+            }
+
             return View(task);
         }
     }
