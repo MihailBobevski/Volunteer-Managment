@@ -73,17 +73,50 @@ namespace VolunteerManagment.Controllers
             return RedirectToAction("Details", new { id = eventId });
         }
         [HttpPost]
-        public IActionResult CancelEvent(int eventId)
+        public async Task<IActionResult> CancelEvent(int eventId)
         {
-            var ev = _context.Events.FirstOrDefault(e => e.EventId == eventId);
+            var ev = await _context.Events
+                .Include(e => e.Tasks)
+                .FirstOrDefaultAsync(e => e.EventId == eventId);
+
             if (ev != null && ev.Status == "Active")
             {
                 ev.Status = "Cancelled";
-                _context.SaveChanges();
+
+                foreach (var task in ev.Tasks)
+                {
+                    task.Status = "Cancelled";
+                }
+
+                await _context.SaveChangesAsync();
             }
 
             return RedirectToAction("Details", new { id = eventId });
         }
+
+        [HttpPost]
+        public async Task<IActionResult> ActivateEvent(int eventId)
+        {
+            var ev = await _context.Events
+                .Include(e => e.Tasks)
+                .FirstOrDefaultAsync(e => e.EventId == eventId);
+
+            if (ev != null && (ev.Status == "Completed" || ev.Status == "Cancelled"))
+            {
+                ev.Status = "Active";
+
+                foreach (var task in ev.Tasks)
+                {
+                    if (task.Status == "Completed") continue;
+                    task.Status = "Assigned";
+                }
+
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Details", new { id = eventId });
+        }
+
         
         [HttpGet]
         public IActionResult Create()

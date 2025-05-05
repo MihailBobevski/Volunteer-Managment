@@ -54,7 +54,7 @@
                                 <input type="hidden" name="userId" value="@task.AssignedTo" />
                                 <input type="hidden" name="eventId" value="@task.EventId" />
                                 <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
-                                    <option value="Pending" selected="@(task.Status == "Pending" ? "selected" : null)">Pending</option>
+                                    <option value="Assigned" selected="@(task.Status == "Assigned" ? "selected" : null)">Assigned</option>
                                     <option value="Completed" selected="@(task.Status == "Completed" ? "selected" : null)">Completed</option>
                                     <option value="Cancelled" selected="@(task.Status == "Cancelled" ? "selected" : null)">Cancelled</option>
                                 </select>

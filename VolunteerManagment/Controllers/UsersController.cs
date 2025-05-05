@@ -91,7 +91,6 @@ namespace VolunteerManagment.Controllers
                     {
                         volunteer.HoursContributed += 1;
 
-                        // Optional: Mark user as "Completed" if all tasks are done
                         var totalTasks = _context.Tasks
                             .Count(t => t.EventId == eventId && t.AssignedTo == userId);
                         var completedTasks = _context.Tasks
