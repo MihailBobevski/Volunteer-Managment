@@ -60,7 +60,14 @@
     <a asp-controller="Tasks" asp-action="Add" asp-route-eventId="@Model.EventId" class="btn btn-primary mb-3">➕ Add Task</a>
     <a asp-controller="Tasks" asp-action="AllTasks" asp-route-eventId="@Model.EventId" class="btn btn-primary mb-3">View All Tasks</a>
 }
+
 <hr />
+@if (Model.Status == "Completed" || Model.Status == "Cancelled")
+{
+    <a asp-controller="Reports" asp-action="View" asp-route-eventId="@Model.EventId" class="btn btn-sm btn-info">View Report</a>
+}
+<hr />
+
 <h4>Volunteers</h4>
 
 @if (Model.Volunteers != null && Model.Volunteers.Any())
@@ -117,13 +124,16 @@
     </table>
 
    
-    if (isOrganizer && !hasUnassignedOrIncompleteTasks && Model.Status != "Completed" && Model.Status != "Cancelled")
+    @if (isOrganizer && !hasUnassignedOrIncompleteTasks && Model.Status == "Active")
     {
-        <form asp-action="CompleteEvent" asp-controller="Events" method="post">
-            <input type="hidden" name="eventId" value="@Model.EventId" />
-            <button class="btn btn-success mt-2">✔ Complete Event</button>
-        </form>
+        <a asp-controller="Reports" asp-action="Write"
+           asp-route-eventId="@Model.EventId"
+           asp-route-actionType="Complete"
+           class="btn btn-success mt-2">
+            ✔ Complete Event
+        </a>
     }
+
     
 }
 else
@@ -133,11 +143,14 @@ else
 
 @if (isOrganizer && Model.Status == "Active")
 {
-    <form asp-action="CancelEvent" asp-controller="Events" method="post" class="mt-2">
-        <input type="hidden" name="eventId" value="@Model.EventId" />
-        <button class="btn btn-outline-danger">✖ Cancel Event</button>
-    </form>
+    <a asp-controller="Reports" asp-action="Write"
+       asp-route-eventId="@Model.EventId"
+       asp-route-actionType="Cancel"
+       class="btn btn-outline-danger mt-2">
+        ✖ Cancel Event
+    </a>
 }
+
 
 @if (isOrganizer && (Model.Status == "Completed" || Model.Status == "Cancelled"))
 {

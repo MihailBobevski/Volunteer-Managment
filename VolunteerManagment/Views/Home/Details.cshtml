@@ -24,6 +24,10 @@
         This event has been completed. All tasks were finished.
     </div>
 }
+@if (Model.Status == "Completed" || Model.Status == "Cancelled")
+{
+    <a asp-controller="Reports" asp-action="View" asp-route-eventId="@Model.EventId" class="btn btn-sm btn-info">View Report</a>
+}
 
 <h4 class="mt-4">Tasks</h4>
 

@@ -1,0 +1,36 @@
+@model VolunteerManagment.Models.Report
+
+@{
+    ViewData["Title"] = "Write Report";
+    var actionType = ViewBag.ActionType as string ?? "Cancel";
+    var eventTitle = ViewBag.EventTitle as string ?? "Unknown Event";
+    var actionText = actionType == "Cancel" ? "cancel" : "complete";
+}
+
+<h2>@(char.ToUpper(actionText[0]) + actionText.Substring(1)) Event</h2>
+
+<p><strong>Event Title:</strong> @eventTitle</p>
+<p>To @actionText the event, please provide a detailed report with more information about it.</p>
+
+<form asp-action="Write" method="post" asp-antiforgery="true">
+    <input type="hidden" asp-for="EventId" />
+    <input type="hidden" name="actionType" value="@actionType" />
+
+    <div class="form-group">
+        <label asp-for="Content" class="control-label"></label>
+        <textarea asp-for="Content" class="form-control" rows="6"></textarea>
+        <span asp-validation-for="Content" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-2">
+        Confirm @actionText
+    </button>
+
+    <a asp-controller="Events" asp-action="Details" asp-route-id="@Model.EventId" class="btn btn-secondary mt-2">
+        Cancel
+    </a>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

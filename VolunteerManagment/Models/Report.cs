@@ -1,6 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Components;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace VolunteerManagment.Models
 {
@@ -9,18 +9,19 @@ namespace VolunteerManagment.Models
         [Key]
         public int ReportId { get; set; }
 
-        [ForeignKey("EventId")]
+        [Required(ErrorMessage = "Report content is required.")]
+        public string Content { get; set; }
+
         public int EventId { get; set; }
+
+        [ValidateNever]
         public Event Event { get; set; }
 
-        [ForeignKey("GeneratedBy")]
-        public int GeneratedBy { get; set; }
-        public User User { get; set; }
+        public int UserId { get; set; }
 
-        public string Content { get; set; }
+        [ValidateNever]
+        public User User { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }
-
-
