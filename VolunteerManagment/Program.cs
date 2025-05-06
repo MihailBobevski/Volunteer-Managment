@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using VolunteerManagment2.Data;
 using VolunteerManagment.Services;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();

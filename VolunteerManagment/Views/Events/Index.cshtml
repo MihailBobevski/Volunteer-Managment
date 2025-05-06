@@ -17,12 +17,11 @@
 <div class="events-wrapper">
     <h2 class="section-title">@(isAdmin ? "All Events" : "My Events")</h2>
 
-    @if (!isAdmin)
-    {
+    
         <div class="text-end mb-4">
             <a asp-action="Create" class="btn btn-primary">+ Create New Event</a>
         </div>
-    }
+    
 
     <div class="event-section">
         <h4 class="event-status-heading text-success">Active Events</h4>

@@ -17,6 +17,10 @@ namespace VolunteerManagment.Controllers
         [HttpGet]
         public IActionResult Write(int eventId, string actionType)
         {
+            var role = HttpContext.Session.GetString("Role");
+            if (role != "Organizer" && role != "Admin")
+                return RedirectToAction("Index", "Home");
+
             var userIdStr = HttpContext.Session.GetString("UserId");
             if (string.IsNullOrEmpty(userIdStr))
             {
@@ -45,6 +49,11 @@ namespace VolunteerManagment.Controllers
         [HttpPost]
         public async Task<IActionResult> Write(Report report, string actionType)
         {
+            
+            var role = HttpContext.Session.GetString("Role");
+            if (role != "Organizer" && role != "Admin")
+                return RedirectToAction("Index", "Home");
+
             var userIdStr = HttpContext.Session.GetString("UserId");
             if (string.IsNullOrEmpty(userIdStr))
                 return RedirectToAction("Login", "User");
@@ -74,6 +83,10 @@ namespace VolunteerManagment.Controllers
         [HttpPost]
         public async Task<IActionResult> Activate(int eventId)
         {
+            var role = HttpContext.Session.GetString("Role");
+            if (role != "Organizer" && role != "Admin")
+                return RedirectToAction("Index", "Home");
+
             var ev = await _context.Events
                 .Include(e => e.Tasks)
                 .FirstOrDefaultAsync(e => e.EventId == eventId);
@@ -100,6 +113,9 @@ namespace VolunteerManagment.Controllers
         [HttpGet]
         public async Task<IActionResult> View(int eventId)
         {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("Role")))
+                return RedirectToAction("Login", "User");
+
             var report = await _context.Reports
                 .Include(r => r.User)
                 .Include(r => r.Event)

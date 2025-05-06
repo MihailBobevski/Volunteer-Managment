@@ -16,6 +16,10 @@ public class AdminController : Controller
     [HttpGet]
     public IActionResult Requests()
     {
+        if (HttpContext.Session.GetString("Role") != "Admin")
+            return RedirectToAction("Index", "Home");
+
+
         var requests = _context.OrganizerRequests
             .Include(r => r.User)
             .OrderByDescending(r => r.DateRequested)
@@ -27,6 +31,10 @@ public class AdminController : Controller
     [HttpPost]
     public IActionResult Accept(int id)
     {
+        if (HttpContext.Session.GetString("Role") != "Admin")
+            return RedirectToAction("Index", "Home");
+
+
         var req = _context.OrganizerRequests.FirstOrDefault(r => r.RequestId == id);
         if (req != null)
         {
@@ -42,6 +50,10 @@ public class AdminController : Controller
     [HttpPost]
     public IActionResult Reject(int id)
     {
+        if (HttpContext.Session.GetString("Role") != "Admin")
+            return RedirectToAction("Index", "Home");
+
+
         var req = _context.OrganizerRequests.FirstOrDefault(r => r.RequestId == id);
         if (req != null)
         {
@@ -55,6 +67,10 @@ public class AdminController : Controller
     [HttpGet]
     public IActionResult MotivationalLetter(int id)
     {
+        if (HttpContext.Session.GetString("Role") != "Admin")
+            return RedirectToAction("Index", "Home");
+
+
         var request = _context.OrganizerRequests
             .Include(r => r.User)
             .FirstOrDefault(r => r.RequestId == id);
@@ -67,6 +83,9 @@ public class AdminController : Controller
     [HttpGet]
     public async Task<IActionResult> AllReports()
     {
+        if (HttpContext.Session.GetString("Role") != "Admin")
+            return RedirectToAction("Index", "Home");
+
         var role = HttpContext.Session.GetString("Role");
         if (role != "Admin") return Unauthorized();
 

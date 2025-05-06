@@ -29,6 +29,9 @@ namespace VolunteerManagment.Controllers
 
         public IActionResult Index()
         {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("Role")))
+                return RedirectToAction("Login", "User");
+
             var userIdStr = HttpContext.Session.GetString("UserId");
             if (string.IsNullOrEmpty(userIdStr)) return RedirectToAction("Login", "User");
 
@@ -45,7 +48,7 @@ namespace VolunteerManagment.Controllers
                     .Include(e => e.Organizer)
                     .Where(e =>
                             e.Status == "Active" &&
-                            e.Tasks.Any(t => t.AssignedTo == userId) // поне една задача твоя
+                            e.Tasks.Any(t => t.AssignedTo == userId) 
                     )
                     .ToList();
             }
@@ -61,6 +64,9 @@ namespace VolunteerManagment.Controllers
         
         public IActionResult Details(int id)
         {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("Role")))
+                return RedirectToAction("Login", "User");
+
             var ev = _context.Events
                 .Include(e => e.Tasks)
                 .ThenInclude(t => t.User)
@@ -79,6 +85,9 @@ namespace VolunteerManagment.Controllers
         [HttpPost]
         public IActionResult SignUpForTask(int taskId, int eventId)
         {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("Role")))
+                return RedirectToAction("Login", "User");
+
             var username = HttpContext.Session.GetString("Username");
             if (string.IsNullOrEmpty(username))
                 return RedirectToAction("Login", "User");
@@ -110,6 +119,9 @@ namespace VolunteerManagment.Controllers
         
         public IActionResult PastEvents()
         {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("Role")))
+                return RedirectToAction("Login", "User");
+
             var userIdStr = HttpContext.Session.GetString("UserId");
             var role = HttpContext.Session.GetString("Role");
 
@@ -129,6 +141,7 @@ namespace VolunteerManagment.Controllers
             }
             else
             {
+                
                 events = _context.VolunteersEvents
                     .Where(ve => ve.UserId == userId &&
                                  (ve.Event.Status == "Completed" || ve.Event.Status == "Cancelled"))
@@ -146,6 +159,9 @@ namespace VolunteerManagment.Controllers
         
         public IActionResult Volunteer()
         {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("Role")))
+                return RedirectToAction("Login", "User");
+
             var userIdStr = HttpContext.Session.GetString("UserId");
             if (string.IsNullOrEmpty(userIdStr)) return RedirectToAction("Login", "User");
 

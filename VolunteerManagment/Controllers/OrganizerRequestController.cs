@@ -16,12 +16,19 @@ public class OrganizerRequestController : Controller
     [HttpGet]
     public IActionResult Apply()
     {
+        if (HttpContext.Session.GetString("Role") != "User")
+            return RedirectToAction("Index", "Home");
+
+
         return View();
     }
     
     [HttpPost]
     public IActionResult Apply([FromForm] string motivationalLetter)
     {
+        if (HttpContext.Session.GetString("Role") != "User")
+            return RedirectToAction("Index", "Home");
+
         var userIdStr = HttpContext.Session.GetString("UserId");
         if(string.IsNullOrEmpty(userIdStr)) return RedirectToAction("Login", "User");
         

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using VolunteerManagment.Models;
 using VolunteerManagment2.Data;
@@ -18,14 +17,30 @@ namespace VolunteerManagment.Controllers
         {
             _context = context;
         }
-        
+
+        private bool HasAccess()
+        {
+            var role = HttpContext.Session.GetString("Role");
+            return role == "Admin" || role == "Organizer";
+        }
+
+        private IActionResult BlockIfUnauthorized()
+        {
+            if (!HasAccess())
+                return RedirectToAction("Login", "User");
+            return null;
+        }
+
         [HttpGet]
         public async Task<IActionResult> Index()
         {
+            var block = BlockIfUnauthorized();
+            if (block != null) return block;
+
             var role = HttpContext.Session.GetString("Role");
             var userIdStr = HttpContext.Session.GetString("UserId");
 
-            if (string.IsNullOrEmpty(userIdStr) || string.IsNullOrEmpty(role))
+            if (string.IsNullOrEmpty(userIdStr))
                 return RedirectToAction("Login", "User");
 
             int userId = int.Parse(userIdStr);
@@ -51,35 +66,31 @@ namespace VolunteerManagment.Controllers
             return View(events);
         }
 
-
-
-        // GET: Events/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var block = BlockIfUnauthorized();
+            if (block != null) return block;
+
+            if (id == null) return NotFound();
 
             var @event = await _context.Events
                 .Include(e => e.Organizer)
                 .Include(e => e.Volunteers)
                 .ThenInclude(ve => ve.User)
-                .Include(e => e.Tasks) 
+                .Include(e => e.Tasks)
                 .FirstOrDefaultAsync(m => m.EventId == id);
 
-
-            if (@event == null)
-            {
-                return NotFound();
-            }
+            if (@event == null) return NotFound();
 
             return View(@event);
         }
-        
+
         [HttpPost]
         public IActionResult CompleteEvent(int eventId)
         {
+            var block = BlockIfUnauthorized();
+            if (block != null) return block;
+
             var ev = _context.Events.FirstOrDefault(e => e.EventId == eventId);
             if (ev != null)
             {
@@ -89,9 +100,13 @@ namespace VolunteerManagment.Controllers
 
             return RedirectToAction("Details", new { id = eventId });
         }
+
         [HttpPost]
         public async Task<IActionResult> CancelEvent(int eventId)
         {
+            var block = BlockIfUnauthorized();
+            if (block != null) return block;
+
             var ev = await _context.Events
                 .Include(e => e.Tasks)
                 .FirstOrDefaultAsync(e => e.EventId == eventId);
@@ -99,7 +114,6 @@ namespace VolunteerManagment.Controllers
             if (ev != null && ev.Status == "Active")
             {
                 ev.Status = "Cancelled";
-
                 foreach (var task in ev.Tasks)
                 {
                     task.Status = "Cancelled";
@@ -114,6 +128,9 @@ namespace VolunteerManagment.Controllers
         [HttpPost]
         public async Task<IActionResult> ActivateEvent(int eventId)
         {
+            var block = BlockIfUnauthorized();
+            if (block != null) return block;
+
             var ev = await _context.Events
                 .Include(e => e.Tasks)
                 .FirstOrDefaultAsync(e => e.EventId == eventId);
@@ -134,10 +151,12 @@ namespace VolunteerManagment.Controllers
             return RedirectToAction("Details", new { id = eventId });
         }
 
-        
         [HttpGet]
         public IActionResult Create()
         {
+            var block = BlockIfUnauthorized();
+            if (block != null) return block;
+
             return View();
         }
 
@@ -145,6 +164,9 @@ namespace VolunteerManagment.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Event @event)
         {
+            var block = BlockIfUnauthorized();
+            if (block != null) return block;
+
             var userIdStr = HttpContext.Session.GetString("UserId");
             if (string.IsNullOrEmpty(userIdStr))
                 return RedirectToAction("Login", "User");
@@ -163,6 +185,9 @@ namespace VolunteerManagment.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
+            var block = BlockIfUnauthorized();
+            if (block != null) return block;
+
             if (id == null)
                 return NotFound();
 
@@ -177,6 +202,9 @@ namespace VolunteerManagment.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Event updatedEvent)
         {
+            var block = BlockIfUnauthorized();
+            if (block != null) return block;
+
             if (id != updatedEvent.EventId)
                 return NotFound();
 
@@ -195,23 +223,21 @@ namespace VolunteerManagment.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-
-
         [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
+            var block = BlockIfUnauthorized();
+            if (block != null) return block;
+
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var @event = await _context.Events
-                .Include(@event => @event.Organizer)
+                .Include(e => e.Organizer)
                 .FirstOrDefaultAsync(m => m.EventId == id);
+
             if (@event == null)
-            {
                 return NotFound();
-            }
 
             return View(@event);
         }
@@ -220,6 +246,9 @@ namespace VolunteerManagment.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var block = BlockIfUnauthorized();
+            if (block != null) return block;
+
             var @event = await _context.Events
                 .Include(e => e.Tasks)
                 .Include(e => e.Volunteers)
@@ -236,7 +265,7 @@ namespace VolunteerManagment.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-        
+
         private bool EventExists(int id)
         {
             return _context.Events.Any(e => e.EventId == id);

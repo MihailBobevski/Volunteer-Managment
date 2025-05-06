@@ -21,12 +21,18 @@ namespace VolunteerManagment.Controllers
         // GET: Users
         public async Task<IActionResult> Index()
         {
+            if (HttpContext.Session.GetString("Role") != "Admin")
+                return RedirectToAction("Index", "Home");
             return View(await _context.Users.ToListAsync());
         }
 
         // GET: Users/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            var role = HttpContext.Session.GetString("Role");
+            if (role != "Organizer" && role != "Admin")
+                return RedirectToAction("Index", "Home");
+
             if (id == null)
             {
                 return NotFound();
@@ -52,6 +58,9 @@ namespace VolunteerManagment.Controllers
 
         public async Task<IActionResult> UserTasks(int? userId, int? eventId)
         {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("Role")))
+                return RedirectToAction("Login", "User");
+
             if (userId == null || eventId == null)
             {
                 return NotFound();
@@ -77,6 +86,10 @@ namespace VolunteerManagment.Controllers
         [HttpPost]
         public IActionResult UpdateTaskStatus(int taskId, int userId, int eventId, string status)
         {
+            var role = HttpContext.Session.GetString("Role");
+            if (role != "Organizer" && role != "Admin")
+                return RedirectToAction("Index", "Home");
+
             var task = _context.Tasks.FirstOrDefault(t => t.TaskId == taskId);
 
             if (task != null)
@@ -110,14 +123,14 @@ namespace VolunteerManagment.Controllers
 
             return RedirectToAction("UserTasks", new { userId, eventId });
         }
-
-
-
-
-
+        
         // GET: Users/Create
         public IActionResult Create()
         {
+            var role = HttpContext.Session.GetString("Role");
+            if (role != "Organizer" && role != "Admin")
+                return RedirectToAction("Index", "Home");
+
             return View();
         }
 
@@ -126,6 +139,10 @@ namespace VolunteerManagment.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("UserId,FName,LName,Email,Password,Phone,CreatedAt")] User user)
         {
+            var role = HttpContext.Session.GetString("Role");
+            if (role != "Organizer" && role != "Admin")
+                return RedirectToAction("Index", "Home");
+
             if (ModelState.IsValid)
             {
                 _context.Add(user);
@@ -138,6 +155,10 @@ namespace VolunteerManagment.Controllers
         // GET: Users/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            var role = HttpContext.Session.GetString("Role");
+            if (role != "Organizer" && role != "Admin")
+                return RedirectToAction("Index", "Home");
+
             if (id == null)
             {
                 return NotFound();
@@ -156,6 +177,10 @@ namespace VolunteerManagment.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("UserId,FName,LName,Email,Password,Phone,CreatedAt")] User user)
         {
+            var role = HttpContext.Session.GetString("Role");
+            if (role != "Organizer" && role != "Admin")
+                return RedirectToAction("Index", "Home");
+
             if (id != user.UserId)
             {
                 return NotFound();
@@ -187,6 +212,10 @@ namespace VolunteerManagment.Controllers
         // GET: Users/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            var role = HttpContext.Session.GetString("Role");
+            if (role != "Organizer" && role != "Admin")
+                return RedirectToAction("Index", "Home");
+
             if (id == null)
             {
                 return NotFound();
@@ -207,6 +236,10 @@ namespace VolunteerManagment.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var role = HttpContext.Session.GetString("Role");
+            if (role != "Organizer" && role != "Admin")
+                return RedirectToAction("Index", "Home");
+
             var user = await _context.Users.FindAsync(id);
             if (user != null)
             {

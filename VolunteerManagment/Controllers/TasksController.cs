@@ -17,6 +17,10 @@ namespace VolunteerManagment.Controllers
         [HttpGet]
         public IActionResult Add(int eventId)
         {
+            var role = HttpContext.Session.GetString("Role");
+            if (role != "Organizer" && role != "Admin")
+                return RedirectToAction("Index", "Home");
+
             var task = new EventTask { EventId = eventId, Status = "Pending" };
             return View(task);
         }
@@ -25,6 +29,10 @@ namespace VolunteerManagment.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(EventTask task)
         {
+            var role = HttpContext.Session.GetString("Role");
+            if (role != "Organizer" && role != "Admin")
+                return RedirectToAction("Index", "Home");
+
 
             if (ModelState.IsValid)
             {
@@ -44,6 +52,10 @@ namespace VolunteerManagment.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
+            var role = HttpContext.Session.GetString("Role");
+            if (role != "Organizer" && role != "Admin")
+                return RedirectToAction("Index", "Home");
+
             var task = await _context.Tasks.FindAsync(id);
             if (task == null) return NotFound();
             return View(task);
@@ -53,6 +65,10 @@ namespace VolunteerManagment.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EventTask task)
         {
+            var role = HttpContext.Session.GetString("Role");
+            if (role != "Organizer" && role != "Admin")
+                return RedirectToAction("Index", "Home");
+
             if (ModelState.IsValid)
             {
                 _context.Update(task);
@@ -65,6 +81,10 @@ namespace VolunteerManagment.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
+            var role = HttpContext.Session.GetString("Role");
+            if (role != "Organizer" && role != "Admin")
+                return RedirectToAction("Index", "Home");
+
             var task = await _context.Tasks.FindAsync(id);
             if (task == null) return NotFound();
             return View(task);
@@ -74,6 +94,10 @@ namespace VolunteerManagment.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var role = HttpContext.Session.GetString("Role");
+            if (role != "Organizer" && role != "Admin")
+                return RedirectToAction("Index", "Home");
+
             var task = await _context.Tasks
                 .AsNoTracking()
                 .FirstOrDefaultAsync(t => t.TaskId == id);
@@ -94,6 +118,10 @@ namespace VolunteerManagment.Controllers
         [HttpGet]
         public async Task<IActionResult> AllTasks(int eventId)
         {
+            var role = HttpContext.Session.GetString("Role");
+            if (role != "Organizer" && role != "Admin")
+                return RedirectToAction("Index", "Home");
+
             var ev = await _context.Events
                 .Include(e => e.Tasks)
                 .ThenInclude(t => t.User) 
@@ -110,6 +138,7 @@ namespace VolunteerManagment.Controllers
         [HttpGet]
         public async Task<IActionResult> AllEventTasks()
         {
+            
             var role = HttpContext.Session.GetString("Role");
             if (role != "Admin") return Unauthorized();
 
