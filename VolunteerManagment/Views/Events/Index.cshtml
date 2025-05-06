@@ -2,18 +2,21 @@
 
 @{
     ViewData["Title"] = "My Events";
-}
+    var role = Context.Session.GetString("Role");
+    var isAdmin = role == "Admin";
 
-<h2>My Events</h2>
-
-<p>
-    <a asp-action="Create" class="btn btn-primary">Create New Event</a>
-</p>
-
-@{
     var activeEvents = Model.Where(e => e.Status == "Active").ToList();
     var completedEvents = Model.Where(e => e.Status == "Completed").ToList();
     var cancelledEvents = Model.Where(e => e.Status == "Cancelled").ToList();
+}
+
+<h2>@(isAdmin ? "All Events" : "My Events")</h2>
+
+@if (!isAdmin)
+{
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Create New Event</a>
+    </p>
 }
 
 <h4 class="mt-4 text-success">Active Events</h4>
@@ -24,6 +27,7 @@
             <tr>
                 <th>Title</th>
                 <th>Date</th>
+                @if (isAdmin) { <th>Organizer</th> }
                 <th>Status</th>
                 <th></th>
             </tr>
@@ -34,10 +38,11 @@
             <tr>
                 <td>@item.Title</td>
                 <td>@item.Date.ToShortDateString()</td>
+                @if (isAdmin) { <td>@item.Organizer?.UserName</td> }
                 <td>@item.Status</td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@item.EventId">Details</a> |
-                    <a asp-action="Edit" asp-route-id="@item.EventId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.EventId">Details</a>
+                    <a asp-action="Edit" asp-route-id="@item.EventId">Edit</a>
                     <a asp-action="Delete" asp-route-id="@item.EventId">Delete</a>
                 </td>
             </tr>
@@ -58,6 +63,7 @@ else
             <tr>
                 <th>Title</th>
                 <th>Date</th>
+                @if (isAdmin) { <th>Organizer</th> }
                 <th>Status</th>
                 <th></th>
             </tr>
@@ -68,9 +74,12 @@ else
             <tr>
                 <td>@item.Title</td>
                 <td>@item.Date.ToShortDateString()</td>
+                @if (isAdmin) { <td>@item.Organizer?.UserName</td> }
                 <td>@item.Status</td>
                 <td>
                     <a asp-action="Details" asp-route-id="@item.EventId">Details</a>
+                    <a asp-action="Edit" asp-route-id="@item.EventId">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@item.EventId">Delete</a>
                 </td>
             </tr>
         }
@@ -90,6 +99,7 @@ else
             <tr>
                 <th>Title</th>
                 <th>Date</th>
+                @if (isAdmin) { <th>Organizer</th> }
                 <th>Status</th>
                 <th></th>
             </tr>
@@ -100,9 +110,12 @@ else
             <tr>
                 <td>@item.Title</td>
                 <td>@item.Date.ToShortDateString()</td>
+                @if (isAdmin) { <td>@item.Organizer?.UserName</td> }
                 <td>@item.Status</td>
                 <td>
                     <a asp-action="Details" asp-route-id="@item.EventId">Details</a>
+                    <a asp-action="Edit" asp-route-id="@item.EventId">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@item.EventId">Delete</a>
                 </td>
             </tr>
         }

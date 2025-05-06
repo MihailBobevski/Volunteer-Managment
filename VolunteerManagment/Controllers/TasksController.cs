@@ -107,5 +107,21 @@ namespace VolunteerManagment.Controllers
             return View(ev);
         }
         
+        [HttpGet]
+        public async Task<IActionResult> AllEventTasks()
+        {
+            var role = HttpContext.Session.GetString("Role");
+            if (role != "Admin") return Unauthorized();
+
+            var tasks = await _context.Tasks
+                .Include(t => t.Event)
+                .Include(t => t.User) 
+                .OrderByDescending(t => t.Event.Date)
+                .ToListAsync();
+
+            return View(tasks);
+        }
+
+        
     }
 }

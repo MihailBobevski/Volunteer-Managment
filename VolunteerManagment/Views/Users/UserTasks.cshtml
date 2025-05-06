@@ -4,6 +4,7 @@
     var role = Context.Session.GetString("Role");
     var userId = int.Parse(Context.Session.GetString("UserId"));
     var isOrganizer = ViewBag.IsOrganizer != null && (bool)ViewBag.IsOrganizer;
+    var isAdmin = role == "Admin";
     var eventId = Model.FirstOrDefault()?.EventId ?? 0;
     var total = Model.Count;
     var completed = Model.Count(t => t.Status == "Completed");
@@ -31,7 +32,7 @@
                 <th>Description</th>
                 <th>Status</th>
                 <th>Deadline</th>
-                @if (isOrganizer)
+                @if (isOrganizer || isAdmin)
                 {
                     <th>Change Status</th>
                 }
@@ -46,7 +47,7 @@
                     <td>@task.Status</td>
                     <td>@task.Deadline.ToShortDateString()</td>
 
-                    @if (isOrganizer)
+                    @if (isOrganizer || isAdmin)
                     {
                         <td>
                             <form asp-action="UpdateTaskStatus" asp-controller="Users" method="post" style="margin: 0;">
@@ -76,5 +77,6 @@ else
 }
 @if (role == "Admin")
 {
+    <a asp-controller="Events" asp-action="Details" asp-route-id="@eventId" class="btn btn-secondary mt-3">← Back to Event</a>
     <a asp-controller="Users" asp-action="Details" asp-route-id="@ViewBag.ViewedUserId" class="btn btn-secondary mt-3">← Back to User</a>
 }

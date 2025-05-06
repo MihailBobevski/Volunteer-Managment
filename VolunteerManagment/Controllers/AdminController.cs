@@ -70,5 +70,20 @@ public class AdminController : Controller
 
         return View(request);
     }
+    [HttpGet]
+    public async Task<IActionResult> AllReports()
+    {
+        var role = HttpContext.Session.GetString("Role");
+        if (role != "Admin") return Unauthorized();
+
+        var reports = await _context.Reports
+            .Include(r => r.User)
+            .Include(r => r.Event)
+            .OrderByDescending(r => r.CreatedAt)
+            .ToListAsync();
+
+        return View(reports);
+    }
+
     
 }

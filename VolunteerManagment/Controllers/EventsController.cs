@@ -18,22 +18,39 @@ namespace VolunteerManagment.Controllers
         {
             _context = context;
         }
-
-        // GET: Events
+        
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
+            var role = HttpContext.Session.GetString("Role");
             var userIdStr = HttpContext.Session.GetString("UserId");
-            if (string.IsNullOrEmpty(userIdStr)) return RedirectToAction("Login", "User");
+
+            if (string.IsNullOrEmpty(userIdStr) || string.IsNullOrEmpty(role))
+                return RedirectToAction("Login", "User");
 
             int userId = int.Parse(userIdStr);
 
-            var events = await _context.Events
-                .Include(e => e.Organizer)
-                .Where(e => e.CreatedBy == userId)
-                .ToListAsync();
+            List<Event> events;
+
+            if (role == "Admin")
+            {
+                events = await _context.Events
+                    .Include(e => e.Organizer)
+                    .OrderByDescending(e => e.Date)
+                    .ToListAsync();
+            }
+            else
+            {
+                events = await _context.Events
+                    .Include(e => e.Organizer)
+                    .Where(e => e.CreatedBy == userId)
+                    .OrderByDescending(e => e.Date)
+                    .ToListAsync();
+            }
 
             return View(events);
         }
+
 
 
         // GET: Events/Details/5

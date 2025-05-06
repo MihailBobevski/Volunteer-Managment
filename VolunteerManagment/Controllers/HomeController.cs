@@ -101,25 +101,39 @@ namespace VolunteerManagment.Controllers
         public IActionResult PastEvents()
         {
             var userIdStr = HttpContext.Session.GetString("UserId");
-            if (string.IsNullOrEmpty(userIdStr)) return RedirectToAction("Login", "User");
+            var role = HttpContext.Session.GetString("Role");
+
+            if (string.IsNullOrEmpty(userIdStr) || string.IsNullOrEmpty(role))
+                return RedirectToAction("Login", "User");
 
             int userId = int.Parse(userIdStr);
+            List<Event> events;
 
-            var events = _context.VolunteersEvents
-                .Where(ve => ve.UserId == userId && 
-                             (ve.Event.Status == "Completed" || ve.Event.Status == "Cancelled"))
-                .Include(ve => ve.Event)
-                .ThenInclude(e => e.Organizer)
-                .Select(ve => ve.Event)
-                .Distinct()
-                .ToList();
+            if (role == "Admin")
+            {
+                events = _context.Events
+                    .Where(e => e.Status == "Completed" || e.Status == "Cancelled")
+                    .Include(e => e.Organizer)
+                    .OrderByDescending(e => e.Date)
+                    .ToList();
+            }
+            else
+            {
+                events = _context.VolunteersEvents
+                    .Where(ve => ve.UserId == userId &&
+                                 (ve.Event.Status == "Completed" || ve.Event.Status == "Cancelled"))
+                    .Include(ve => ve.Event)
+                    .ThenInclude(e => e.Organizer)
+                    .Select(ve => ve.Event)
+                    .Distinct()
+                    .OrderByDescending(e => e.Date)
+                    .ToList();
+            }
 
-            ViewBag.Role = HttpContext.Session.GetString("Role");
+            ViewBag.Role = role;
             return View(events);
         }
-
-
-
+        
         public IActionResult Volunteer()
         {
             var userIdStr = HttpContext.Session.GetString("UserId");

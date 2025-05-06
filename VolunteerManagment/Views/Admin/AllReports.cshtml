@@ -1,0 +1,31 @@
+@model List<VolunteerManagment.Models.Report>
+
+@{
+    ViewData["Title"] = "All Reports";
+}
+
+<h2>All Reports</h2>  
+
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th>Event</th>
+        <th>Written By</th>
+        <th>Date</th>
+        <th>View</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var report in Model)
+    {
+        <tr>
+            <td>@report.Event?.Title</td>
+            <td>@report.User?.UserName (@report.User?.Email)</td>
+            <td>@report.CreatedAt.ToLocalTime().ToString("g")</td>
+            <td>
+                <a asp-controller="Reports" asp-action="View" asp-route-eventId="@report.EventId" class="btn btn-sm btn-outline-primary">View Full</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

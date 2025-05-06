@@ -1,0 +1,35 @@
+@model List<VolunteerManagment.Models.EventTask>
+
+@{
+    ViewData["Title"] = "All Tasks Across Events";
+}
+
+<h2>All Tasks (Admin View)</h2>
+
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th>Event</th>
+        <th>Task Title</th>
+        <th>Description</th>
+        <th>Status</th>
+        <th>Deadline</th>
+        <th>Assigned To</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var task in Model)
+    {
+        <tr>
+            <td>@task.Event?.Title</td>
+            <td>@task.Title</td>
+            <td>@task.Description</td>
+            <td>@task.Status</td>
+            <td>@task.Deadline.ToShortDateString()</td>
+            <td>
+                @(task.User != null ? $"{task.User.UserName} ({task.User.Email})" : "Unassigned")
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

@@ -64,11 +64,26 @@
                         @if (Role == "Admin")
                         {
                             <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Requests">Organizer Requests</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Index">All Users</a>
+                            </li>
+                            <li>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Events" asp-action="Index">All Events</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Index">Users</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="PastEvents">Past Events</a> 
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Tasks" asp-action="AllEventTasks">All Tasks</a> 
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="AllReports">All Reports</a>
+                            </li>
+                            <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Requests">Organizer Requests</a>
+                            </li>
+                            
+                            
+                            
                         }
 
                         @if (Context.Session.GetString("Role") != null)
