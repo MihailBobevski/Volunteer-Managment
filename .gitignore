@@ -35,3 +35,6 @@ secrets.json
 # Ignore node_modules if you ever use npm (optional, safe)
 node_modules/
 
+*.db-shm
+*.db-wal
+
