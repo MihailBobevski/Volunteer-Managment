@@ -4,7 +4,7 @@
 
 The **Volunteer Management System** is a web-based application built to streamline the organization, management, and tracking of volunteer-based events. It allows admins, organizers, and volunteers to collaborate efficiently on various social, environmental, and community initiatives.
 ---
-## 🔐 Test Login Credentials (for demo and testing)
+## 🔐 Test Login Credentials
 
 ### 👑 Admin
 - **Username**: `bobevskimihail`  
