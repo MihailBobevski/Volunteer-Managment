@@ -155,3 +155,122 @@
 Действия по събития и задачи използват модални прозорци за по-гладко потребителско изживяване
 
 AJAX се използва за промени в реално време без презареждане на страницата
+
+Част 3: Структура на базата данни и API преглед
+1. Преглед на схемата на базата данни
+Таблица: Users (Потребители)
+
+Id (PK) – първичен ключ
+
+Username – потребителско име
+
+PasswordHash – хеширана парола
+
+Role – роля (Admin, Organizer, Volunteer)
+
+Email – имейл
+
+FullName – пълно име
+
+Таблица: Events (Събития)
+
+Id (PK) – първичен ключ
+
+Title – заглавие
+
+Description – описание
+
+Category – категория
+
+Location – местоположение
+
+Date – дата
+
+Status – статус (Active, Cancelled, Completed)
+
+OrganizerId (FK към Users) – организатор
+
+Таблица: Tasks (Задачи)
+
+Id (PK) – първичен ключ
+
+EventId (FK към Events) – към кое събитие принадлежи
+
+Title – заглавие на задачата
+
+Description – описание
+
+Deadline – краен срок
+
+Status – статус (Pending, Completed, Cancelled)
+
+Таблица: Reports (Доклади)
+
+Id (PK) – първичен ключ
+
+EventId (FK към Events)
+
+OrganizerId (FK към Users)
+
+Content – съдържание на доклада
+
+CreatedAt – дата и час на създаване
+
+ReportType – тип (Completion, Cancellation)
+
+Таблица: EventParticipants (Участници в събития)
+
+Id (PK) – първичен ключ
+
+EventId (FK) – събитие
+
+UserId (FK) – потребител
+
+2. Преглед на API Endpoint-и (методи на MVC контролери)
+AccountController
+Login() / Logout() – вход и изход
+
+Register() – регистрация на нов потребител
+
+Profile() – преглед и редакция на профил
+
+AdminController
+Users() – управление на потребители
+
+Events() – преглед на всички събития
+
+Reports() – преглед на всички доклади
+
+EventsController
+Create() – създаване на ново събитие
+
+Edit(id) – редакция на събитие
+
+Details(id) – подробности за събитие
+
+Cancel(id) – отказване на събитие (пренасочва към форма за доклад)
+
+Complete(id) – приключване на събитие (пренасочва към форма за доклад)
+
+TasksController
+Add(eventId) – добавяне на задача към събитие
+
+Edit(id) – редактиране на задача
+
+Delete(id) – изтриване на задача
+
+ReportsController
+Create(eventId, type) – създаване на доклад за събитие
+
+View(id) – преглед на съдържанието на доклад
+
+VolunteerController
+MyEvents() – събития, в които потребителят участва
+
+AvailableEvents() – списък с достъпни събития
+
+Join(eventId) – доброволец се записва за събитие
+
+3. Пример за начални данни (Seeding)
+Базови потребители и примерни събития се въвеждат чрез SQL скриптове или EF Core миграции за целите на разработка и тестване.
+
