@@ -1,0 +1,125 @@
+body {
+    background-color: #f0fdf4;
+    font-family: 'Segoe UI', sans-serif;
+    color: #1f2937;
+    margin: 0;
+    padding: 0;
+}
+
+.report-write-wrapper {
+    max-width: 700px;
+    margin: 3rem auto;
+    padding: 2.5rem;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+}
+
+.form-title {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    border-bottom: 2px solid #22C55E;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.event-title {
+    text-align: center;
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.instruction-text {
+    text-align: center;
+    color: #374151;
+    font-size: 0.95rem;
+    margin-bottom: 2rem;
+}
+
+.report-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-group label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    display: block;
+    color: #374151;
+}
+
+textarea.form-control {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    background-color: #f9fafb;
+    transition: border-color 0.3s ease;
+    resize: vertical;
+    font-size: 0.95rem;
+}
+
+textarea.form-control:focus {
+    border-color: #3b82f6;
+    outline: none;
+    background-color: #ffffff;
+}
+
+.text-danger {
+    font-size: 0.875rem;
+    color: #ef4444;
+    margin-top: 0.25rem;
+    display: block;
+}
+
+.form-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.btn {
+    padding: 0.6rem 1.5rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    display: inline-block;
+    transition: background 0.3s ease, transform 0.2s ease;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+}
+.btn-submit {
+    background: linear-gradient(to right, #3B82F6, #22C55E);
+    color: white;
+}
+.form-title {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1f2937;
+    display: inline-block;
+    border-bottom: 2px solid #22C55E;
+    padding-bottom: 0.5rem;
+    margin: 0 auto 1.5rem;
+}
+
+.btn-submit:hover {
+    background: linear-gradient(to right, #22C55E, #3B82F6);
+    transform: translateY(-2px);
+}
+
+.btn-cancel {
+    background-color: #6b7280;
+    color: white;
+}
+
+.btn-cancel:hover {
+    background-color: #4b5563;
+    transform: translateY(-2px);
+}

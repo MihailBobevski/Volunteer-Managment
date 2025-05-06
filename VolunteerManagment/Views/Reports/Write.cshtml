@@ -7,29 +7,35 @@
     var actionText = actionType == "Cancel" ? "cancel" : "complete";
 }
 
-<h2>@(char.ToUpper(actionText[0]) + actionText.Substring(1)) Event</h2>
+@section Styles {
+    <link rel="stylesheet" href="~/css/Reports/write.css" asp-append-version="true" />
+}
 
-<p><strong>Event Title:</strong> @eventTitle</p>
-<p>To @actionText the event, please provide a detailed report with more information about it.</p>
+<div class="report-write-wrapper text-center">
+    <h2 class="form-title">@char.ToUpper(actionText[0])@actionText.Substring(1) Event</h2>
 
-<form asp-action="Write" method="post" asp-antiforgery="true">
-    <input type="hidden" asp-for="EventId" />
-    <input type="hidden" name="actionType" value="@actionType" />
+    <p class="event-title"><strong>Event Title:</strong> @eventTitle</p>
+    <p class="instruction-text">
+        To @actionText the event, please provide a detailed report with more information about it.
+    </p>
 
-    <div class="form-group">
-        <label asp-for="Content" class="control-label"></label>
-        <textarea asp-for="Content" class="form-control" rows="6"></textarea>
-        <span asp-validation-for="Content" class="text-danger"></span>
-    </div>
+    <form asp-action="Write" method="post" asp-antiforgery="true" class="report-form">
+        <input type="hidden" asp-for="EventId" />
+        <input type="hidden" name="actionType" value="@actionType" />
 
-    <button type="submit" class="btn btn-primary mt-2">
-        Confirm @actionText
-    </button>
+        <div class="form-group">
+            <label asp-for="Content"></label>
+            <textarea asp-for="Content" class="form-control" rows="6"></textarea>
+            <span asp-validation-for="Content" class="text-danger"></span>
+        </div>
 
-    <a asp-controller="Events" asp-action="Details" asp-route-id="@Model.EventId" class="btn btn-secondary mt-2">
-        Cancel
-    </a>
-</form>
+        <div class="form-buttons">
+            <button type="submit" class="btn btn-submit">Confirm @actionText</button>
+            <a asp-controller="Events" asp-action="Details" asp-route-id="@Model.EventId" class="btn btn-cancel">Cancel</a>
+        </div>
+    </form>
+</div>
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

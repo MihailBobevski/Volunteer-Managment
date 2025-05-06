@@ -7,189 +7,177 @@
     var isOrganizer = userId == Model.CreatedBy;
     var isAdmin = role == "Admin";
     var allReady = true;
-    bool hasUnassignedOrIncompleteTasks = Model.Tasks.Any(t => t.AssignedTo == null || !t.Status?.Trim().Equals("Completed", StringComparison.OrdinalIgnoreCase) == true);
+    var hasUnassignedOrIncompleteTasks = Model.Tasks.Any(t => t.AssignedTo == null || !t.Status?.Trim().Equals("Completed", StringComparison.OrdinalIgnoreCase) == true);
 }
 
-<h2>@Model.Title</h2>
-<hr />
-
-<dl class="row">
-    <dt class="col-sm-3">Description</dt>
-    <dd class="col-sm-9">@Model.Description</dd>
-
-    <dt class="col-sm-3">Category</dt>
-    <dd class="col-sm-9">@Model.Category</dd>
-
-    <dt class="col-sm-3">Location</dt>
-    <dd class="col-sm-9">@Model.Location</dd>
-
-    <dt class="col-sm-3">Date</dt>
-    <dd class="col-sm-9">@Model.Date.ToShortDateString()</dd>
-
-    <dt class="col-sm-3">Status</dt>
-    <dd class="col-sm-9">@Model.Status</dd>
-
-    <dt class="col-sm-3">Organizer</dt>
-    <dd class="col-sm-9">@Model.Organizer?.UserName (@Model.Organizer?.Email)</dd>
-</dl>
-
-@if (Model.Status == "Cancelled")
-{
-    <div class="alert alert-danger">This event has been cancelled. Tasks and signups are disabled.</div>
-}
-@if (Model.Status == "Completed")
-{
-    <div class="alert alert-success">This event has been completed. All tasks were finished.</div>
+@section Styles {
+    <link rel="stylesheet" href="~/css/Events/details.css" asp-append-version="true" />
 }
 
-@if (isOrganizer || isAdmin)
-{
-    <div class="mb-3">
-        <a asp-action="Edit" asp-route-id="@Model.EventId" class="btn btn-warning">Edit</a>
-        <a asp-action="Delete" asp-route-id="@Model.EventId" class="btn btn-danger">Delete</a>
+<div class="event-details-wrapper">
+    <h2 class="event-title">@Model.Title</h2>
+
+    <div class="action-buttons">
+        @if (isOrganizer || isAdmin)
+        {
+            <a asp-action="Edit" asp-route-id="@Model.EventId" class="btn btn-edit">Edit</a>
+            <a asp-action="Delete" asp-route-id="@Model.EventId" class="btn btn-delete">Delete</a>
+        }
+
+        <a asp-action="Index" class="btn btn-back">← Back to @(isAdmin ? "All Events" : "My Events")</a>
+
+        @if ((isOrganizer || isAdmin) && Model.Status == "Active")
+        {
+            <a asp-controller="Tasks" asp-action="Add" asp-route-eventId="@Model.EventId" class="btn btn-primary">➕ Add Task</a>
+            <a asp-controller="Tasks" asp-action="AllTasks" asp-route-eventId="@Model.EventId" class="btn btn-primary">📋 View All Tasks</a>
+        }
+
+        @if (Model.Status == "Completed" || Model.Status == "Cancelled")
+        {
+            <a asp-controller="Reports" asp-action="View" asp-route-eventId="@Model.EventId" class="btn btn-info">📄 View Report</a>
+        }
+
+        @if ((isOrganizer || isAdmin) && !hasUnassignedOrIncompleteTasks && Model.Status == "Active")
+        {
+            <a asp-controller="Reports" asp-action="Write" asp-route-eventId="@Model.EventId" asp-route-actionType="Complete" class="btn btn-success">✔ Complete Event</a>
+        }
+
+        @if ((isOrganizer || isAdmin) && Model.Status == "Active")
+        {
+            <a asp-controller="Reports" asp-action="Write" asp-route-eventId="@Model.EventId" asp-route-actionType="Cancel" class="btn btn-cancel">✖ Cancel Event</a>
+        }
+
+        @if ((isOrganizer || isAdmin) && (Model.Status == "Completed" || Model.Status == "Cancelled"))
+        {
+            <form asp-action="ActivateEvent" asp-controller="Events" method="post">
+                <input type="hidden" name="eventId" value="@Model.EventId" />
+                <button type="submit" class="btn btn-outline-primary">🔄 Activate Event</button>
+            </form>
+        }
     </div>
-}
+<hr/>
+    <div class="event-meta">
+        <div class="event-info">
+            <p><strong>Description:</strong> @Model.Description</p>
+            <p><strong>Category:</strong> @Model.Category</p>
+            <p><strong>Location:</strong> @Model.Location</p>
+            <p><strong>Date:</strong> @Model.Date.ToShortDateString()</p>
+            <p><strong>Status:</strong> @Model.Status</p>
+            <p><strong>Organizer:</strong> @Model.Organizer?.UserName (@Model.Organizer?.Email)</p>
+        </div>
 
-@if (isAdmin)
-{
-    <a asp-action="Index" class="btn btn-secondary mb-3">← Back to All Events</a>
-}
-else
-{
-    <a asp-action="Index" class="btn btn-secondary mb-3">← Back to My Events</a>
-}
-
-<hr />
-
-@if ((isOrganizer || isAdmin ) && Model.Status == "Active")
-{
-    <a asp-controller="Tasks" asp-action="Add" asp-route-eventId="@Model.EventId" class="btn btn-primary mb-3">➕ Add Task</a>
-    <a asp-controller="Tasks" asp-action="AllTasks" asp-route-eventId="@Model.EventId" class="btn btn-primary mb-3">View All Tasks</a>
-}
-
-@if (Model.Status == "Completed" || Model.Status == "Cancelled")
-{
-    <a asp-controller="Reports" asp-action="View" asp-route-eventId="@Model.EventId" class="btn btn-sm btn-info">View Report</a>
-}
-
-<hr />
-<h4>Volunteers</h4>
-@if (Model.Volunteers != null && Model.Volunteers.Any())
-{
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Status</th>
-                <th>Details</th>
-            </tr>
-        </thead>
-        <tbody>
-        @foreach (var v in Model.Volunteers)
+        @if (Model.Status == "Cancelled")
         {
-            var userTasks = Model.Tasks.Where(t => t.AssignedTo == v.User.UserId).ToList();
-            var total = userTasks.Count;
-            var completed = userTasks.Count(t => t.Status?.Trim().Equals("Completed", StringComparison.OrdinalIgnoreCase) == true);
-            bool ready = total > 0 && completed == total;
-            if (!ready) { allReady = false; }
-
-            <tr>
-                <td>@v.User.UserName</td>
-                <td>@v.User.Email</td>
-                <td>
-                    @if (total == 0)
-                    {
-                        <span class="text-muted">No tasks assigned</span>
-                    }
-                    else if (ready)
-                    {
-                        <span class="text-success">✔ All tasks done</span>
-                    }
-                    else
-                    {
-                        <span>@completed / @total tasks done</span>
-                    }
-                </td>
-                <td>
-                    <a asp-controller="Users"
-                       asp-action="UserTasks"
-                       asp-route-userId="@v.User.UserId"
-                       asp-route-eventId="@Model.EventId"
-                       class="btn btn-sm btn-outline-primary">View Tasks</a>
-                </td>
-            </tr>
+            <div class="custom-alert danger">This event has been cancelled. Tasks and signups are disabled.</div>
         }
-        </tbody>
-    </table>
+        else if (Model.Status == "Completed")
+        {
+            <div class="custom-alert success">This event has been completed. All tasks were finished.</div>
+        }
+    </div>
 
-    @if ((isOrganizer || isAdmin ) && !hasUnassignedOrIncompleteTasks && Model.Status == "Active")
+    <hr />
+    <h4 class="section-subtitle">Volunteers</h4>
+
+    @if (Model.Volunteers != null && Model.Volunteers.Any())
     {
-        <a asp-controller="Reports" asp-action="Write"
-           asp-route-eventId="@Model.EventId"
-           asp-route-actionType="Complete"
-           class="btn btn-success mt-2">✔ Complete Event</a>
-    }
-}
-else
-{
-    <p>No volunteers for this event.</p>
-}
-
-@if ((isOrganizer || isAdmin ) && Model.Status == "Active")
-{
-    <a asp-controller="Reports" asp-action="Write"
-       asp-route-eventId="@Model.EventId"
-       asp-route-actionType="Cancel"
-       class="btn btn-outline-danger mt-2">✖ Cancel Event</a>
-}
-
-@if ((isOrganizer || isAdmin ) && (Model.Status == "Completed" || Model.Status == "Cancelled"))
-{
-    <form asp-action="ActivateEvent" asp-controller="Events" method="post" class="mt-2">
-        <input type="hidden" name="eventId" value="@Model.EventId" />
-        <button class="btn btn-outline-primary">🔄 Activate Event</button>
-    </form>
-}
-
-<hr />
-<h4>Unassigned Tasks</h4>
-@{
-    var unassignedTasks = Model.Tasks.Where(t => t.AssignedTo == null).ToList();
-}
-@if (unassignedTasks.Any())
-{
-    <table class="table table-sm table-striped">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Description</th>
-                <th>Status</th>
-                <th>Deadline</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-        @foreach (var task in unassignedTasks)
-        {
-            <tr>
-                <td>@task.Title</td>
-                <td>@task.Description</td>
-                <td>@task.Status</td>
-                <td>@task.Deadline.ToShortDateString()</td>
-                <td>
-                    @if (isOrganizer && Model.Status == "Active")
+        <div class="table-wrapper">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Status</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var v in Model.Volunteers)
                     {
-                        <a asp-controller="Tasks" asp-action="Edit" asp-route-id="@task.TaskId" class="btn btn-sm btn-warning">Edit</a>
-                        <a asp-controller="Tasks" asp-action="Delete" asp-route-id="@task.TaskId" class="btn btn-sm btn-danger">Delete</a>
+                        var userTasks = Model.Tasks.Where(t => t.AssignedTo == v.User.UserId).ToList();
+                        var total = userTasks.Count;
+                        var completed = userTasks.Count(t => t.Status?.Trim().Equals("Completed", StringComparison.OrdinalIgnoreCase) == true);
+                        var ready = total > 0 && completed == total;
+                        if (!ready) { allReady = false; }
+
+                        <tr>
+                            <td>@v.User.UserName</td>
+                            <td>@v.User.Email</td>
+                            <td>
+                                @if (total == 0)
+                                {
+                                    <span class="text-muted">No tasks assigned</span>
+                                }
+                                else if (ready)
+                                {
+                                    <span class="text-success">✔ All tasks done</span>
+                                }
+                                else
+                                {
+                                    <span>@completed / @total tasks done</span>
+                                }
+                            </td>
+                            <td>
+                                <a asp-controller="Users"
+                                   asp-action="UserTasks"
+                                   asp-route-userId="@v.User.UserId"
+                                   asp-route-eventId="@Model.EventId"
+                                   class="btn btn-sm btn-outline-primary">View Tasks</a>
+                            </td>
+                        </tr>
                     }
-                </td>
-            </tr>
-        }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>All tasks are assigned.</p>
-}
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <p class="text-muted">No volunteers for this event.</p>
+    }
+
+    <hr />
+    <h4 class="section-subtitle">Unassigned Tasks</h4>
+
+    @{
+        var unassignedTasks = Model.Tasks.Where(t => t.AssignedTo == null).ToList();
+    }
+
+    @if (unassignedTasks.Any())
+    {
+        <div class="table-wrapper">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>Deadline</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var task in unassignedTasks)
+                    {
+                        <tr>
+                            <td>@task.Title</td>
+                            <td>@task.Description</td>
+                            <td>@task.Status</td>
+                            <td>@task.Deadline.ToShortDateString()</td>
+                            <td>
+                                @if (isOrganizer && Model.Status == "Active")
+                                {
+                                    <a asp-controller="Tasks" asp-action="Edit" asp-route-id="@task.TaskId" class="btn btn-sm btn-warning">Edit</a>
+                                    <a asp-controller="Tasks" asp-action="Delete" asp-route-id="@task.TaskId" class="btn btn-sm btn-danger">Delete</a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <p class="text-muted">All tasks are assigned.</p>
+    }
+</div>

@@ -5,26 +5,32 @@
     ViewData["Title"] = "Active Events";
 }
 
-<h2>@ViewData["Title"]</h2>
+@section Styles {
+    <link rel="stylesheet" href="~/css/Home/activeevents.css" asp-append-version="true" />
+}
+
+<h2 class="section-title">@ViewData["Title"]</h2>
 
 @if (!Model.Any())
 {
-    <p>No active events at the moment.</p>
+    <p class="text-muted text-center">No active events at the moment.</p>
 }
 else
 {
-    <div class="row">
+    <div class="row justify-content-center">
         @foreach (var ev in Model)
         {
-            <div class="col-md-4 mb-3">
-                <div class="card shadow-sm h-100">
-                    <div class="card-body">
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 d-flex flex-column">
+                    <div class="card-body d-flex flex-column">
                         <h5 class="card-title">@ev.Title</h5>
                         <p class="card-text">@ev.Description</p>
                         <p><strong>Date:</strong> @ev.Date.ToShortDateString()</p>
                         <p><strong>Location:</strong> @ev.Location</p>
-                        <p><strong>Organizer:</strong> @(ev.Organizer != null ? ev.Organizer.UserName : "Unknown")</p>
-                        <a href="@Url.Action("Details", "Home", new { id = ev.EventId })" class="btn btn-primary btn-sm mt-2">View</a>
+                        <p><strong>Organizer:</strong> @(ev.Organizer?.UserName ?? "Unknown")</p>
+                        <div class="mt-auto">
+                            <a href="@Url.Action("Details", "Home", new { id = ev.EventId })" class="btn btn-primary w-100">View</a>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -6,30 +6,41 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - VolunteerManagment</title>
+    <title>@ViewData["Title"] - VolunteerManagement</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/VolunteerManagment.styles.css" asp-append-version="true" />
+    @RenderSection("Styles", required: false)
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm custom-navbar box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">VolunteerManagment</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                aria-expanded="false" aria-label="Toggle navigation">
+                <a class="navbar-brand d-flex align-items-center">
+                    <img src="~/Images/mv_logo_final.png" alt="Logo" class="nav-logo" />
+                    <span class="brand-title">Volunteer Management</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                       @if(Role is null){
-                           <li class="nav-item">
-                               <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Login">Login</a>
-                           </li>
-                           <li class="nav-item">
-                               <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Register">Register</a>
-                           </li>
-                       }
+                        @if (Role is null)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Login">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Register">Register</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Home" asp-action="AboutUs">About Us</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Home" asp-action="ContactUs">Contact</a>
+                            </li>
+
+                        }
                         @if (Role == "User")
                         {
                             <li class="nav-item">
@@ -44,7 +55,6 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="OrganizerRequest" asp-action="Apply">Become Organizer</a>
                             </li>
-                            
                         }
                         @if (Role == "Organizer")
                         {
@@ -57,7 +67,7 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Volunteer">Volunteer</a>
                             </li>
-                            <li>
+                            <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Events" asp-action="Index">My Events</a>
                             </li>
                         }
@@ -66,30 +76,27 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Index">All Users</a>
                             </li>
-                            <li>
+                            <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Events" asp-action="Index">All Events</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="PastEvents">Past Events</a> 
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="PastEvents">Past Events</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Tasks" asp-action="AllEventTasks">All Tasks</a> 
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Tasks" asp-action="AllEventTasks">All Tasks</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="AllReports">All Reports</a>
                             </li>
                             <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Requests">Organizer Requests</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Requests">Organizer Requests</a>
                             </li>
-                            
-                            
-                            
                         }
-
-                        @if (Context.Session.GetString("Role") != null)
+                        
+                        @if (Role != null)
                         {
                             <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="User" asp-action="Logout">Logout</a>
+                                <a class="nav-link text-dark" asp-controller="User" asp-action="Logout">Logout</a>
                             </li>
                         }
                     </ul>
@@ -97,17 +104,56 @@
             </div>
         </nav>
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - VolunteerManagment
+<footer class="custom-footer mt-auto">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-brand d-flex align-items-center">
+                <img src="~/Images/mv_logo_final.png" alt="Volunteer Management Logo" class="footer-logo-large me-3" />
+                <div>
+                    <div class="footer-title">Volunteer Management</div>
+                    <p class="footer-desc">Empowering communities through service.</p>
+                </div>
+            </div>
+
+
+            <div class="footer-links">
+                <h6>Explore</h6>
+                <ul>
+                    <li><a href="/Home/AboutUs">About Us</a></li>
+                    @if (Role != null)
+                    {
+                        <li><a href="/Home/Volunteer">Get Involved</a></li>
+                        <li><a href="/Home/Index">Events</a></li>
+                    }
+                    <li><a href="/Home/ContactUs">Contact</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-contact">
+                <h6>Contact Us</h6>
+                <p>HQ: 123 Unity Street, Sofia, Bulgaria</p>
+                <p>+359812345678</p>
+                <p>+359876543210</p>
+                <p>help.volunteer@gmail.com</p>
+                <p>support.volunteer@gmail.com</p>
+            </div>
         </div>
-    </footer>
+
+        <div class="footer-copy text-center mt-4">
+            &copy; @DateTime.Now.Year Volunteer Management. All rights reserved.
+        </div>
+    </div>
+</footer>
+
+
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>

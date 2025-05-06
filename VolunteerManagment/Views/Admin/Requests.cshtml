@@ -1,28 +1,36 @@
 @model List<VolunteerManagment.Models.OrganizerRequest>
 
-<h1>Organizer Requests</h1>
+@{
+    ViewData["Title"] = "Organizer Requests";
+}
 
-@*Pending*@
-<h2>Pending Requests</h2>
-<table class="table table-bordered">
-    <thead>
-    <tr>
-        <th>User</th>
-        <th>Letter</th>
-        <th>Date</th>
-        <th>Status</th>
-        <th>Action</th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var req in Model.Where(r => r.Status == "Pending"))
-    {
-        <tr>
-            <td>@req.User.UserName (@req.User.Email)</td>
-            <td><a asp-controller="Admin" asp-action="MotivationalLetter" asp-route-id="@req.RequestId" class="btn btn-sm btn-info">View</a></td>
-            <td>@req.DateRequested.ToShortDateString()</td>
-            <td>@req.Status</td>
-            <td>
+@section Styles {
+    <link rel="stylesheet" href="~/css/Requests/adminrequests.css" asp-append-version="true" />
+}
+
+<div class="requests-wrapper">
+    <h1 class="page-title">Organizer Requests</h1>
+
+    <h2 class="section-subtitle">Pending Requests</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Letter</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var req in Model.Where(r => r.Status == "Pending"))
+        {
+            <tr>
+                <td>@req.User.UserName (@req.User.Email)</td>
+                <td><a asp-controller="Admin" asp-action="MotivationalLetter" asp-route-id="@req.RequestId" class="btn btn-sm btn-info">View</a></td>
+                <td>@req.DateRequested.ToShortDateString()</td>
+                <td>@req.Status</td>
+                <td>
                     <form asp-action="Accept" asp-controller="Admin" method="post" style="display: inline">
                         <input type="hidden" name="id" value="@req.RequestId" />
                         <button type="submit" class="btn btn-success btn-sm">Accept</button>
@@ -31,57 +39,55 @@
                         <input type="hidden" name="id" value="@req.RequestId" />
                         <button type="submit" class="btn btn-danger btn-sm">Reject</button>
                     </form>
-            </td>
-        </tr>
-    }
-    </tbody>
-</table>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
 
+    <h2 class="section-subtitle">Accepted Requests</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Letter</th>
+                <th>Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var req in Model.Where(r => r.Status == "Accepted"))
+        {
+            <tr>
+                <td>@req.User.UserName (@req.User.Email)</td>
+                <td><a asp-controller="Admin" asp-action="MotivationalLetter" asp-route-id="@req.RequestId" class="btn btn-sm btn-info">View</a></td>
+                <td>@req.DateRequested.ToShortDateString()</td>
+                <td>@req.Status</td>
+            </tr>
+        }
+        </tbody>
+    </table>
 
-@*Accepted*@
-<h2>Accepted Requests</h2>
-<table class="table table-bordered">
-    <thead>
-    <tr>
-        <th>User</th>
-        <th>Letter</th>
-        <th>Date</th>
-        <th>Status</th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var req in Model.Where(r => r.Status == "Accepted"))
-    {
-        <tr>
-            <td>@req.User.UserName (@req.User.Email)</td>
-            <td><a asp-controller="Admin" asp-action="MotivationalLetter" asp-route-id="@req.RequestId" class="btn btn-sm btn-info">View</a></td>
-            <td>@req.DateRequested.ToShortDateString()</td>
-            <td>@req.Status</td>
-        </tr>
-    }
-    </tbody>
-</table>
-
-@*Rejected*@
-<h2>Rejected Requests</h2>
-<table class="table table-bordered">
-    <thead>
-    <tr>
-        <th>User</th>
-        <th>Letter</th>
-        <th>Date</th>
-        <th>Status</th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var req in Model.Where(r => r.Status == "Rejected"))
-    {
-        <tr>
-            <td>@req.User.UserName (@req.User.Email)</td>
-            <td><a asp-controller="Admin" asp-action="MotivationalLetter" asp-route-id="@req.RequestId" class="btn btn-sm btn-info">View</a></td>
-            <td>@req.DateRequested.ToShortDateString()</td>
-            <td>@req.Status</td>
-        </tr>
-    }
-    </tbody>
-</table>
+    <h2 class="section-subtitle">Rejected Requests</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Letter</th>
+                <th>Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var req in Model.Where(r => r.Status == "Rejected"))
+        {
+            <tr>
+                <td>@req.User.UserName (@req.User.Email)</td>
+                <td><a asp-controller="Admin" asp-action="MotivationalLetter" asp-route-id="@req.RequestId" class="btn btn-sm btn-info">View</a></td>
+                <td>@req.DateRequested.ToShortDateString()</td>
+                <td>@req.Status</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

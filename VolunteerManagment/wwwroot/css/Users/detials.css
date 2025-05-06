@@ -1,0 +1,128 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    color: #1f2937;
+    margin: 0;
+}
+
+.user-details-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.page-title {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1f2937;
+    border-bottom: 2px solid #22C55E;
+    padding-bottom: 0.5rem;
+    margin: 2rem auto;
+    width: fit-content;
+}
+
+.details-card {
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
+}
+
+dl.row {
+    margin: 0;
+}
+
+dt {
+    font-weight: 600;
+    color: #374151;
+}
+
+dd {
+    margin-bottom: 1rem;
+}
+
+.section-subtitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1e3a8a;
+    margin: 2rem 0 1rem;
+}
+
+.table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 12px;
+    background-color: #ffffff;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+.table thead {
+    background-color: #e2e8f0;
+}
+
+.table th,
+.table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 0.95rem;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #f9fafb;
+}
+
+.btn {
+    padding: 0.5rem 1.25rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 999px;
+    text-decoration: none;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: inline-block;
+    transition: all 0.2s ease;
+    margin-right: 0.5rem;
+}
+
+.btn-sm {
+    padding: 0.35rem 0.85rem;
+    font-size: 0.85rem;
+}
+
+.btn-edit {
+    background-color: #22c55e;
+    color: white;
+}
+
+.btn-edit:hover {
+    background-color: #16a34a;
+    transform: translateY(-1px);
+}
+
+.btn-info {
+    background-color: #3b82f6;
+    color: white;
+}
+
+.btn-info:hover {
+    background-color: #2563eb;
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background-color: #6b7280;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #4b5563;
+    transform: translateY(-1px);
+}
+
+.details-actions {
+    margin-top: 1.5rem;
+    text-align: center;
+}

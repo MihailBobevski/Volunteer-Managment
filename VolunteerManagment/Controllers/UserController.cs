@@ -78,7 +78,7 @@ namespace VolunteerManagment.Controllers
                     if (User.RoleId == 3)
                     {
                         HttpContext.Session.SetString("Role", "Admin");
-                        return RedirectToAction("AdminDash", "Admin");
+                        return RedirectToAction("Index", "Users");
                     }
                 }
             }

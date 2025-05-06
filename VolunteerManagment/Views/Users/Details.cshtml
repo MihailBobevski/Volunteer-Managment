@@ -1,79 +1,74 @@
 ﻿@model VolunteerManagment.Models.User
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "User Details";
 }
 
-<h1>Details</h1>
+@section Styles {
+    <link rel="stylesheet" href="~/css/Users/detials.css" asp-append-version="true" />
+}
 
-<div>
-    <h4>User</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.LName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.LName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Phone)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Phone)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedAt)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedAt)
-        </dd>
-    </dl>
+<div class="user-details-wrapper">
+    <h2 class="page-title">User Details</h2>
+
+    <div class="details-card">
+        <dl class="row">
+            <dt class="col-sm-4">First Name</dt>
+            <dd class="col-sm-8">@Model.FName</dd>
+
+            <dt class="col-sm-4">Last Name</dt>
+            <dd class="col-sm-8">@Model.LName</dd>
+
+            <dt class="col-sm-4">Email</dt>
+            <dd class="col-sm-8">@Model.Email</dd>
+
+            <dt class="col-sm-4">Phone</dt>
+            <dd class="col-sm-8">@Model.Phone</dd>
+
+            <dt class="col-sm-4">Created At</dt>
+            <dd class="col-sm-8">@Model.CreatedAt.ToShortDateString()</dd>
+        </dl>
+
+        <div class="details-actions">
+            <a asp-action="Edit" asp-route-id="@Model.UserId" class="btn btn-edit">Edit</a>
+            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+        </div>
+    </div>
+
+    <h3 class="section-subtitle">Events Volunteered</h3>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Event Title</th>
+                <th>Location</th>
+                <th>Event Date</th>
+                <th>View Tasks</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var ve in (List<VolunteerManagment.Models.VolunteerEvent>)ViewBag.VolunteerEvents)
+        {
+            <tr>
+                <td>@ve.Event.Title</td>
+                <td>@ve.Event.Location</td>
+                <td>@ve.Event.Date.ToShortDateString()</td>
+                <td>
+                    <a class="btn btn-info btn-sm"
+                       asp-controller="Users"
+                       asp-action="UserTasks"
+                       asp-route-userId="@ve.UserId"
+                       asp-route-eventId="@ve.EventId">
+                        View Tasks
+                    </a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+    <div class="details-actions">
+        <a asp-controller="Users" asp-action="Index" class="btn btn-secondary">← Back to Users</a>
+        <a asp-controller="Events" asp-action="Index" class="btn btn-secondary">← Back to Events</a>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.UserId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
-
-<h3>Events Volunteered</h3>
-
-<table class="table">
-    <thead>
-    <tr>
-        <th>Event Title</th>
-        <th>Location</th>
-        <th>Event Date</th>
-        <th>View Tasks</th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var ve in (List<VolunteerManagment.Models.VolunteerEvent>)ViewBag.VolunteerEvents)
-    {
-        <tr>
-            <td>@ve.Event.Title</td>
-            <td>@ve.Event.Location</td>
-            <td>@ve.Event.Date.ToShortDateString()</td>
-            <td>
-                <a class="btn btn-primary" asp-controller="Users" asp-action="UserTasks" asp-route-userId="@ve.UserId" asp-route-eventId="@ve.EventId">
-                    View Tasks
-                </a>
-            </td>
-        </tr>
-    }
-    </tbody>
-</table>
-
-<a asp-controller="Users" asp-action="Index"  class="btn btn-secondary mt-3">← Back to Users</a>
-<a asp-controller="Events" asp-action="Index"  class="btn btn-secondary mt-3">← Back to Events</a>

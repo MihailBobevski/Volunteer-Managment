@@ -12,13 +12,7 @@ public class AdminController : Controller
     {
         _context = context;
     }
-
-
-    [HttpGet]
-    public IActionResult AdminDash()
-    {
-        return View();
-    }
+    
     [HttpGet]
     public IActionResult Requests()
     {

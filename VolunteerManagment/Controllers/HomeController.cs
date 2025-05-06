@@ -16,6 +16,16 @@ namespace VolunteerManagment.Controllers
             _context = context;
             _taskService = taskService;
         }
+        
+        public IActionResult ContactUs()
+        {
+            return View();
+        }
+
+        public IActionResult AboutUs()
+        {
+            return View();
+        }
 
         public IActionResult Index()
         {

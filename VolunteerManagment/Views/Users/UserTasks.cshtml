@@ -9,6 +9,10 @@
     var total = Model.Count;
     var completed = Model.Count(t => t.Status == "Completed");
 }
+@section Styles {
+    <link rel="stylesheet" href="~/css/Users/usertasks.css" asp-append-version="true" />
+}
+
 
 <h2>User's Tasks for this Event</h2>
 

@@ -3,82 +3,84 @@
 @{
     var userId = int.Parse(Context.Session.GetString("UserId"));
     var role = Context.Session.GetString("Role");
+    ViewData["Title"] = Model.Title;
 }
 
-<h2>@Model.Title</h2>
-<p>@Model.Description</p>
-<p><strong>Date:</strong> @Model.Date.ToShortDateString()</p>
-<p><strong>Location:</strong> @Model.Location</p>
-<p><strong>Status:</strong> @Model.Status</p>
-<p><strong>Organizer:</strong> @Model.Organizer?.UserName (@Model.Organizer?.Email)</p>
-
-@if (Model.Status == "Cancelled")
-{
-    <div class="alert alert-danger mt-3">
-        This event has been cancelled. Signups are disabled.
-    </div>
-}
-@if (Model.Status == "Completed")
-{
-    <div class="alert alert-success">
-        This event has been completed. All tasks were finished.
-    </div>
-}
-@if (Model.Status == "Completed" || Model.Status == "Cancelled")
-{
-    <a asp-controller="Reports" asp-action="View" asp-route-eventId="@Model.EventId" class="btn btn-sm btn-info">View Report</a>
+@section Styles {
+    <link rel="stylesheet" href="~/css/Home/details.css" asp-append-version="true" />
 }
 
-<h4 class="mt-4">Tasks</h4>
+<div class="event-details-wrapper">
+    <div class="event-info">
+        <h2>@Model.Title</h2>
+        <p class="event-desc">@Model.Description</p>
+        <div class="event-meta">
+            <p><strong>Date:</strong> @Model.Date.ToShortDateString()</p>
+            <p><strong>Location:</strong> @Model.Location</p>
+            <p><strong>Status:</strong> @Model.Status</p>
+            <p><strong>Organizer:</strong> @Model.Organizer?.UserName (@Model.Organizer?.Email)</p>
+        </div>
 
-@if (!Model.Tasks.Any())
-{
-    <p>This event has no tasks.</p>
-}
-else
-{
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Description</th>
-                <th>Status</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-        @foreach (var task in Model.Tasks)
+        @if (Model.Status == "Cancelled")
         {
-            <tr>
-                <td>@task.Title</td>
-                <td>@task.Description</td>
-                <td>@task.Status</td>
-                <td>
-                    @if (Model.Status == "Active" && task.AssignedTo == null && (role == "User" || role == "Organizer"))
-                    {
-                        <form asp-controller="Home" asp-action="SignUpForTask" method="post">
-                            <input type="hidden" name="taskId" value="@task.TaskId" />
-                            <input type="hidden" name="eventId" value="@Model.EventId" />
-                            <button type="submit" class="btn btn-success btn-sm">Sign Up</button>
-                        </form>
-                    }
-                    else if (task.AssignedTo == userId)
-                    {
-                        <span class="text-success">
-                            @(Model.Status == "Completed" ? "You were assigned" : "You're assigned")
-                        </span>
-                    }
-                    else if (task.User != null)
-                    {
-                        <span class="text-muted">Assigned to @task.User.UserName</span>
-                    }
-                    else
-                    {
-                        <span>-</span>
-                    }
-                </td>
-            </tr>
+            <div class="alert-danger">This event has been cancelled. Signups are disabled.</div>
         }
-        </tbody>
-    </table>
-}
+        else if (Model.Status == "Completed")
+        {
+            <div class="alert-success">This event has been completed. All tasks were finished.</div>
+        }
+
+        @if (Model.Status == "Completed" || Model.Status == "Cancelled")
+        {
+            <a asp-controller="Reports" asp-action="View" asp-route-eventId="@Model.EventId" class="btn-report">View Report</a>
+        }
+    </div>
+
+    <div class="task-panel">
+        <h4>Tasks</h4>
+
+        @if (!Model.Tasks.Any())
+        {
+            <p class="text-muted">This event has no tasks.</p>
+        }
+        else
+        {
+            <div class="task-list">
+                @foreach (var task in Model.Tasks)
+                {
+                    <div class="task-item">
+                        <div>
+                            <h5>@task.Title</h5>
+                            <p>@task.Description</p>
+                            <span class="badge status">@task.Status</span>
+                        </div>
+                        <div class="task-action">
+                            @if (Model.Status == "Active" && task.AssignedTo == null && (role == "User" || role == "Organizer"))
+                            {
+                                <form asp-controller="Home" asp-action="SignUpForTask" method="post">
+                                    <input type="hidden" name="taskId" value="@task.TaskId" />
+                                    <input type="hidden" name="eventId" value="@Model.EventId" />
+                                    <button type="submit" class="btn-signup">Sign Up</button>
+                                </form>
+                            }
+                            else if (task.AssignedTo == userId)
+                            {
+                                <span class="text-success">
+                                    @(Model.Status == "Completed" ? "You were assigned" : "You're assigned")
+                                </span>
+                            }
+                            else if (task.User != null)
+                            {
+                                <span class="text-muted">Assigned to @task.User.UserName</span>
+                            }
+                            else
+                            {
+                                <span>-</span>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>

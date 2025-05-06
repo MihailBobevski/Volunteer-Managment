@@ -4,25 +4,32 @@
     ViewData["Title"] = "Delete Task";
 }
 
-<h3>Are you sure you want to delete this task?</h3>
-<div>
-    <h4>Task: @Model.Title</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">Description</dt>
-        <dd class="col-sm-10">@Model.Description</dd>
+@section Styles {
+    <link rel="stylesheet" href="~/css/Events/crud.css" asp-append-version="true" />
+}
 
-        <dt class="col-sm-2">Status</dt>
-        <dd class="col-sm-10">@Model.Status</dd>
+<div class="create-page-wrapper">
+    <h2 class="page-title">Delete Task</h2>
+    <p class="subtitle text-danger">Are you sure you want to delete this task?</p>
 
-        <dt class="col-sm-2">Deadline</dt>
-        <dd class="col-sm-10">@Model.Deadline.ToShortDateString()</dd>
-    </dl>
+    <div class="form-container">
+        <h4 class="mb-3">Task: @Model.Title</h4>
+        <dl class="row">
+            <dt class="col-sm-4">Description</dt>
+            <dd class="col-sm-8">@Model.Description</dd>
 
-    <form asp-action="Delete" method="post">
-        <input type="hidden" asp-for="TaskId" />
-        <input type="hidden" asp-for="EventId" /> 
-        <button type="submit" class="btn btn-danger">Delete</button>
-        <a asp-controller="Events" asp-action="Details" asp-route-id="@Model.EventId" class="btn btn-secondary">Cancel</a>
-    </form>
+            <dt class="col-sm-4">Status</dt>
+            <dd class="col-sm-8">@Model.Status</dd>
+
+            <dt class="col-sm-4">Deadline</dt>
+            <dd class="col-sm-8">@Model.Deadline.ToShortDateString()</dd>
+        </dl>
+
+        <form asp-action="Delete" method="post" class="text-center mt-4">
+            <input type="hidden" asp-for="TaskId" />
+            <input type="hidden" asp-for="EventId" />
+            <button type="submit" class="btn btn-danger">Delete</button>
+            <a asp-controller="Events" asp-action="Details" asp-route-id="@Model.EventId" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
 </div>

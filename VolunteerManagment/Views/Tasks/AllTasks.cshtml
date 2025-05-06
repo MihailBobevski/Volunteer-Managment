@@ -4,6 +4,10 @@
     var userId = int.Parse(Context.Session.GetString("UserId"));
     var isOrganizer = userId == Model.CreatedBy;
 }
+@section Styles {
+    <link rel="stylesheet" href="~/css/Tasks/viewalltasks.css" asp-append-version="true" />
+}
+
 
 <h4>All Tasks</h4>
 

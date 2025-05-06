@@ -1,0 +1,160 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.event-details-wrapper {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.05);
+}
+
+.event-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    text-align: center;
+    color: #1f2937;
+    border-bottom: 2px solid #22C55E;
+    padding-bottom: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.event-info p {
+    font-size: 1rem;
+    color: #374151;
+    margin-bottom: 0.4rem;
+}
+
+.section-subtitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1e3a8a;
+    margin: 2rem 0 1rem;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    margin-bottom: 2rem;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #f9fafb;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.table th, .table td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.table th {
+    background-color: #e2e8f0;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.custom-alert {
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    margin: 1rem 0;
+}
+
+.custom-alert.success {
+    background-color: #dcfce7;
+    color: #166534;
+    border-left: 5px solid #22c55e;
+}
+
+.custom-alert.danger {
+    background-color: #fee2e2;
+    color: #991b1b;
+    border-left: 5px solid #ef4444;
+}
+
+.action-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.btn {
+    padding: 0.5rem 1.25rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 999px;
+    text-align: center;
+    transition: all 0.2s ease-in-out;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 0.95rem;
+    cursor: pointer;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    opacity: 0.95;
+}
+
+.btn-edit {
+    background: #f59e0b;
+    color: white;
+}
+
+.btn-delete {
+    background: #ef4444;
+    color: white;
+}
+
+.btn-back {
+    background: #6b7280;
+    color: white;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #3B82F6, #22C55E);
+    color: white;
+}
+
+.btn-info {
+    background: #3b82f6;
+    color: white;
+}
+
+.btn-success {
+    background: #22c55e;
+    color: white;
+}
+
+.btn-cancel {
+    background: #ef4444;
+    color: white;
+}
+
+.btn-outline-primary {
+    background: white;
+    color: #3b82f6;
+    border: 2px solid #3b82f6;
+    font-weight: 600;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-outline-primary:hover {
+    background: #3b82f6;
+    color: white;
+}
+
+.text-success {
+    color: #16a34a;
+}
+
+.text-muted {
+    color: #6b7280;
+}

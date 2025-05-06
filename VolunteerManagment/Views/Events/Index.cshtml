@@ -10,119 +10,137 @@
     var cancelledEvents = Model.Where(e => e.Status == "Cancelled").ToList();
 }
 
-<h2>@(isAdmin ? "All Events" : "My Events")</h2>
-
-@if (!isAdmin)
-{
-    <p>
-        <a asp-action="Create" class="btn btn-primary">Create New Event</a>
-    </p>
+@section Styles {
+    <link rel="stylesheet" href="~/css/Events/myevents.css" asp-append-version="true" />
 }
 
-<h4 class="mt-4 text-success">Active Events</h4>
-@if (activeEvents.Any())
-{
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Date</th>
-                @if (isAdmin) { <th>Organizer</th> }
-                <th>Status</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-        @foreach (var item in activeEvents)
+<div class="events-wrapper">
+    <h2 class="section-title">@(isAdmin ? "All Events" : "My Events")</h2>
+
+    @if (!isAdmin)
+    {
+        <div class="text-end mb-4">
+            <a asp-action="Create" class="btn btn-primary">+ Create New Event</a>
+        </div>
+    }
+
+    <div class="event-section">
+        <h4 class="event-status-heading text-success">Active Events</h4>
+        @if (activeEvents.Any())
         {
-            <tr>
-                <td>@item.Title</td>
-                <td>@item.Date.ToShortDateString()</td>
-                @if (isAdmin) { <td>@item.Organizer?.UserName</td> }
-                <td>@item.Status</td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.EventId">Details</a>
-                    <a asp-action="Edit" asp-route-id="@item.EventId">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@item.EventId">Delete</a>
-                </td>
-            </tr>
+            <div class="table-responsive">
+                <table class="table event-table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Date</th>
+                            @if (isAdmin) { <th>Organizer</th> }
+                            <th>Status</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var item in activeEvents)
+                    {
+                        <tr>
+                            <td>@item.Title</td>
+                            <td>@item.Date.ToShortDateString()</td>
+                            @if (isAdmin) { <td>@item.Organizer?.UserName</td> }
+                            <td>@item.Status</td>
+                            <td class="text-end">
+                                <a asp-action="Details" asp-route-id="@item.EventId" class="btn btn-outline-info btn-sm">Details</a>
+                                <a asp-action="Edit" asp-route-id="@item.EventId" class="btn btn-outline-warning btn-sm">Edit</a>
+                                <a asp-action="Delete" asp-route-id="@item.EventId" class="btn btn-outline-danger btn-sm">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
         }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>No active events.</p>
-}
-
-<h4 class="mt-4 text-primary">Completed Events</h4>
-@if (completedEvents.Any())
-{
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Date</th>
-                @if (isAdmin) { <th>Organizer</th> }
-                <th>Status</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-        @foreach (var item in completedEvents)
+        else
         {
-            <tr>
-                <td>@item.Title</td>
-                <td>@item.Date.ToShortDateString()</td>
-                @if (isAdmin) { <td>@item.Organizer?.UserName</td> }
-                <td>@item.Status</td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.EventId">Details</a>
-                    <a asp-action="Edit" asp-route-id="@item.EventId">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@item.EventId">Delete</a>
-                </td>
-            </tr>
+            <p class="text-muted">No active events.</p>
         }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>No completed events.</p>
-}
+    </div>
 
-<h4 class="mt-4 text-danger">Cancelled Events</h4>
-@if (cancelledEvents.Any())
-{
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Date</th>
-                @if (isAdmin) { <th>Organizer</th> }
-                <th>Status</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-        @foreach (var item in cancelledEvents)
+    <div class="event-section">
+        <h4 class="event-status-heading text-primary">Completed Events</h4>
+        @if (completedEvents.Any())
         {
-            <tr>
-                <td>@item.Title</td>
-                <td>@item.Date.ToShortDateString()</td>
-                @if (isAdmin) { <td>@item.Organizer?.UserName</td> }
-                <td>@item.Status</td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.EventId">Details</a>
-                    <a asp-action="Edit" asp-route-id="@item.EventId">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@item.EventId">Delete</a>
-                </td>
-            </tr>
+            <div class="table-responsive">
+                <table class="table event-table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Date</th>
+                            @if (isAdmin) { <th>Organizer</th> }
+                            <th>Status</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var item in completedEvents)
+                    {
+                        <tr>
+                            <td>@item.Title</td>
+                            <td>@item.Date.ToShortDateString()</td>
+                            @if (isAdmin) { <td>@item.Organizer?.UserName</td> }
+                            <td>@item.Status</td>
+                            <td class="text-end">
+                                <a asp-action="Details" asp-route-id="@item.EventId" class="btn btn-outline-info btn-sm">Details</a>
+                                <a asp-action="Edit" asp-route-id="@item.EventId" class="btn btn-outline-warning btn-sm">Edit</a>
+                                <a asp-action="Delete" asp-route-id="@item.EventId" class="btn btn-outline-danger btn-sm">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
         }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>No cancelled events.</p>
-}
+        else
+        {
+            <p class="text-muted">No completed events.</p>
+        }
+    </div>
+
+    <div class="event-section">
+        <h4 class="event-status-heading text-danger">Cancelled Events</h4>
+        @if (cancelledEvents.Any())
+        {
+            <div class="table-responsive">
+                <table class="table event-table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Date</th>
+                            @if (isAdmin) { <th>Organizer</th> }
+                            <th>Status</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var item in cancelledEvents)
+                    {
+                        <tr>
+                            <td>@item.Title</td>
+                            <td>@item.Date.ToShortDateString()</td>
+                            @if (isAdmin) { <td>@item.Organizer?.UserName</td> }
+                            <td>@item.Status</td>
+                            <td class="text-end">
+                                <a asp-action="Details" asp-route-id="@item.EventId" class="btn btn-outline-info btn-sm">Details</a>
+                                <a asp-action="Edit" asp-route-id="@item.EventId" class="btn btn-outline-warning btn-sm">Edit</a>
+                                <a asp-action="Delete" asp-route-id="@item.EventId" class="btn btn-outline-danger btn-sm">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <p class="text-muted">No cancelled events.</p>
+        }
+    </div>
+</div>

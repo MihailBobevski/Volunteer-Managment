@@ -1,55 +1,61 @@
 ﻿@model VolunteerManagment.Models.Event
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Event";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/Events/crud.css" asp-append-version="true" />
 }
 
-<h1>Create</h1>
+<div class="create-page-wrapper">
+    <h1 class="page-title">Create Event</h1>
+    <h4 class="subtitle">Fill in the event details</h4>
 
-<h4>Event</h4>
-
-<hr />
-<div class="row">
-    <div class="col-md-4">
+    <div class="form-container">
         <form asp-action="Create" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
+                <label asp-for="Title"></label>
                 <input asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
+                <label asp-for="Description"></label>
                 <input asp-for="Description" class="form-control" />
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="Category" class="control-label"></label>
+                <label asp-for="Category"></label>
                 <input asp-for="Category" class="form-control" />
                 <span asp-validation-for="Category" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="Location" class="control-label"></label>
+                <label asp-for="Location"></label>
                 <input asp-for="Location" class="form-control" />
                 <span asp-validation-for="Location" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="Date" class="control-label"></label>
+                <label asp-for="Date"></label>
                 <input asp-for="Date" class="form-control" />
                 <span asp-validation-for="Date" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+
+            <div class="form-group text-center">
+                <input type="submit" value="Create" class="btn-primary" />
             </div>
         </form>
-    </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+        <div class="text-center">
+            <a asp-action="Index" class="back-link">← Back to List</a>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
-

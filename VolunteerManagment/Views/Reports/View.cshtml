@@ -6,55 +6,55 @@
     var role = Context.Session.GetString("Role");
 }
 
-<h2>Report for Event: @Model.Event.Title</h2>
+@section Styles {
+    <link rel="stylesheet" href="~/css/Reports/view.css" asp-append-version="true" />
+}
 
-<div class="card">
-    <div class="card-header">
-        Written by: @Model.User.UserName (@Model.User.Email)
+<div class="report-view-wrapper">
+    <h2>Report for Event: @Model.Event.Title</h2>
+
+    <div class="card">
+        <div class="card-header">
+            Written by: @Model.User.UserName (@Model.User.Email)
+        </div>
+        <div class="card-body">
+            <p><strong>Created:</strong> @Model.CreatedAt.ToLocalTime().ToString("g")</p>
+            <hr />
+            <p>@Model.Content</p>
+        </div>
     </div>
-    <div class="card-body">
-        <p><strong>Created:</strong> @Model.CreatedAt.ToLocalTime().ToString("g")</p>
-        <hr />
-        <p>@Model.Content</p>
-    </div>
-</div>
 
-<hr/>
-
-<h4 class="mt-4">Tasks Summary</h4>
-<table class="table table-bordered table-striped">
-    <thead class="table-dark">
-    <tr>
-        <th>Title</th>
-        <th>Description</th>
-        <th>Status</th>
-        <th>Assigned To</th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var task in Model.Event.Tasks)
-    {
+    <h4>Tasks Summary</h4>
+    <table class="table">
+        <thead>
         <tr>
-            <td>@task.Title</td>
-            <td>@task.Description</td>
-            <td>@task.Status</td>
-            <td>
-                @(task.User != null ? $"{task.User.UserName} ({task.User.Email})" : "Unassigned")
-            </td>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Assigned To</th>
         </tr>
+        </thead>
+        <tbody>
+        @foreach (var task in Model.Event.Tasks)
+        {
+            <tr>
+                <td>@task.Title</td>
+                <td>@task.Description</td>
+                <td>@task.Status</td>
+                <td>
+                    @(task.User != null ? $"{task.User.UserName} ({task.User.Email})" : "Unassigned")
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+    @if (role == "Organizer")
+    {
+        <a asp-controller="Events" asp-action="Details" asp-route-id="@Model.EventId" class="btn btn-secondary mt-3">← Back to Event</a>
     }
-    </tbody>
-</table>
-
-<hr/>
-
-@if (role == "Organizer")
-{
-    <a asp-controller="Events" asp-action="Details" asp-route-id="@Model.EventId" class="btn btn-secondary mt-3">← Back to Event</a>
-
-}
-@if (role == "User")
-{
-    <a asp-controller="Home" asp-action="Details" asp-route-id="@Model.EventId" class="btn btn-secondary mt-3">← Back to Event</a>
-
-}
+    @if (role == "User")
+    {
+        <a asp-controller="Home" asp-action="Details" asp-route-id="@Model.EventId" class="btn btn-secondary mt-3">← Back to Event</a>
+    }
+</div>
