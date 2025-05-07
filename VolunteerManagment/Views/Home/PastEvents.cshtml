@@ -1,7 +1,15 @@
 @model List<VolunteerManagment.Models.Event>
 
 @{
-    ViewData["Title"] = "Past Events You Participated In";
+    if (Context.Session.GetString("Role") != "Admin")
+    {
+
+        ViewData["Title"] = "Past Events You Participated In";
+    }
+    else
+    {
+        ViewData["Title"] = "Past Events";
+    }
 }
 
 @section Styles {
